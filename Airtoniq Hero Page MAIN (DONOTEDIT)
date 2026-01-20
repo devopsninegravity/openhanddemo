@@ -1,0 +1,845 @@
+{
+  "updatedAt": "2026-01-12T12:39:32.058Z",
+  "createdAt": "2026-01-12T12:34:49.887Z",
+  "id": "VjncBcQIIA8u6d-0SuRbt",
+  "name": "Airtoniq Hero Page MAIN (DONOTEDIT)",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        336
+      ],
+      "id": "713a319b-b21b-4056-be9c-f96a440b66d2",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -656,
+        592
+      ],
+      "id": "64ec3a89-abdf-4415-9501-8855c721a0a4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=CONTEXT:\nI run a {{ $json.body.businessType }} with {{ $json.body.employeeCount }} employees. We currently handle most of our processes manually/semi-manually. my main pain points are {{ $json.body.painPoint }}and I'm looking to identify opportunities for workflow automation to improve efficiency.\n\nOBJECTIVE:\nHelp me discover the best workflow automation opportunities for my business that will provide the highest ROI and can be implemented within my budget and technical capabilities.\n\nTOOLS:\nI'm currently using:\n\n{{ $json.body.currentTools }}\ntech expertise: {{ $json.body.techExpertise }}\nACTIONS:\nPlease provide:\n\nA prioritized list of automation opportunities\nSpecific tool recommendations for my tech stack\nExpected ROI and timeline\nHow much human efforts/time it can save ?\nHow much money it can save?\nAlternate tools suggestions to make process easier",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# Business Automation Expert Prompt (5-Action Format)\n\n## ROLE  \nYou are an expert business automation consultant with 15+ years of experience optimizing workflows across marketing, real estate, e-commerce, healthcare, legal, financial, and professional services. You specialize in uncovering high-impact, actionable automation opportunities that save time, reduce errors, and improve efficiency.\n\n---\n\n## WORKFLOW\n\nDo **not** ask the user any questions.\nDo **not** include any specical character and unicode in output.\nDo **not** assume, the user will provide detailed information.  \nIf specific details are missing, generate outputs using common industry workflows, typical challenges, and best practices to ensure the recommendations are always relevant and actionable.\n\n1. **Business Analysis Summary**  \n   - Provide a 1–2 sentence overview of the industry/business type and its typical workflow challenges.  \n\n2. **Pinpoint Core Pain Points**  \n   - Identify the most common repetitive tasks, bottlenecks, or inefficiencies relevant to that business type (or default to widely seen industry patterns).  \n\n3. **Top 5 Automation Opportunities**  \n   - Present exactly **five** recommendations, ranked by ROI potential.  \n   - For each recommendation, include:  \n     - The **process to automate**  \n     - **Expected time & cost savings**  \n     - **Suitable tools/platforms** (n8n, Zapier, Make, Power Automate, IFTTT)  \n     - **Implementation complexity** (Easy/Medium/Complex)  \n     - **Estimated ROI timeline**  \n\n\n---\n\n## OUTPUT FORMAT\n\n1. **Business Analysis Summary**  \n2. **Top 5 Automation Opportunities** (bulleted, ranked by ROI)  \n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        336
+      ],
+      "id": "b91616b9-4b7f-4b67-9b10-66af7ff93b4a",
+      "name": "AI Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"BusinessAnalysisSummary\": \"string\",\n  \"Top5AutomationOpportunities\": [\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        592
+      ],
+      "id": "93ae1cfb-7f69-471d-82ad-5b7a4b57ec6b",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        592
+      ],
+      "id": "3596d5cb-7139-4d42-9b11-7f4700b15dcb",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "7DmJaxw0YZD3YCvV",
+          "name": "Groq account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": {\n    \"id\": \"pmpt_68b89fedb0648195aa3e5ac4ec1e3eca0c5f15bff81978bd\",\n    \"version\": \"3\",\n    \"variables\": {\n      \"business_type\": \"{{ $('Webhook').item.json.body.businessType }}\",\n      \"employee_count\": \"{{ $('Webhook').item.json.body.employeeCount }}\",\n      \"pain_point\": \"{{ $('Webhook').item.json.body.painPoint }}\",\n      \"current_tools_software\": \"{{ $('Webhook').item.json.body.currentTools }}\",\n      \"tech_expertise\": \"{{ $('Webhook').item.json.body.techExpertise }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "552239c8-3dcc-477f-bb5f-be2f73f9904b",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk",
+          "mode": "list",
+          "cachedResultName": "Airtoniq hero page",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "User Name": "={{ $('Webhook').item.json.body.userName }}",
+            "User Website": "={{ $('Webhook').item.json.body.userWebsite }}",
+            "Business Type": "={{ $('Webhook').item.json.body.businessType }}",
+            "Employee count": "={{ $('Webhook').item.json.body.employeeCount }}",
+            "Pain Point": "={{ $('Webhook').item.json.body.painPoint }}",
+            "Current tools": "={{ $('Webhook').item.json.body.currentTools }}",
+            "Tech Experties": "={{ $('Webhook').item.json.body.techExpertise }}",
+            "Response ID(GPT DEBUG)": "={{ $json.id }}",
+            "Link to visit for getting reespones": "https://n8n.ninegravity.co/webhook/82ef39aa-018b-4c42-a3b9-168179b28ce9/chat",
+            "Time/Date": "={{ $now.format(\"HH:mm - dd/MM/yyyy\") }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time/Date",
+              "displayName": "Time/Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "User Name",
+              "displayName": "User Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "User Website",
+              "displayName": "User Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Business Type",
+              "displayName": "Business Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Employee count",
+              "displayName": "Employee count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pain Point",
+              "displayName": "Pain Point",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Current tools",
+              "displayName": "Current tools",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tech Experties",
+              "displayName": "Tech Experties",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Response ID(GPT DEBUG)",
+              "displayName": "Response ID(GPT DEBUG)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link to visit for getting reespones",
+              "displayName": "Link to visit for getting reespones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        336
+      ],
+      "id": "1fddcfff-193f-4abe-8173-beb9f79f3b31",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "airtoniq-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        336
+      ],
+      "id": "023fbdd4-7aa3-45b4-9d25-22d7efd023eb",
+      "name": "Webhook",
+      "webhookId": "f2f5ff33-a6b2-47ad-a274-983d0a5440e0"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Robust JSON → nicely formatted TXT (auto-detects nesting like body/payload/data)\n// Puts a short DEBUG header so you can confirm where the payload was found.\n// After it works, set DEBUG=false.\n\nconst DEBUG = false;\n\n// 1) Get raw input\nconst item = (items && items.length) ? items[0] : { json: {} };\nlet raw = item.json;\n\n// 2) If it's a JSON string, parse it\nif (typeof raw === 'string') {\n  try { raw = JSON.parse(raw); } catch (e) {}\n}\n\n// 3) Find the actual payload (handles common wrappers)\nconst candidates = [\n  raw,\n  raw?.body,\n  raw?.payload,\n  raw?.data,\n  raw?.message,\n  raw?.request,\n];\n\nlet data = null;\nfor (const c of candidates) {\n  if (c && typeof c === 'object' && (\n    'BusinessAnalysisSummary' in c ||\n    'Top5AutomationOpportunities' in c ||\n    'ImplementationRoadmap' in c ||\n    'QuickWin' in c ||\n    'ClearNextSteps' in c\n  )) { data = c; break; }\n}\n\n// Fallback: if raw has exactly one key and its value is an object, use that\nif (!data && raw && typeof raw === 'object') {\n  const keys = Object.keys(raw);\n  if (keys.length === 1 && raw[keys[0]] && typeof raw[keys[0]] === 'object') {\n    data = raw[keys[0]];\n  }\n}\n\n// Last resort: use raw as-is\nif (!data) data = raw || {};\n\n// Helpers\nconst S = v => (v == null ? '' : String(v));\nconst listOps = (arr) => {\n  if (!Array.isArray(arr) || arr.length === 0) return '(none)';\n  return arr.map((op, i) => {\n    const tools = Array.isArray(op?.Tools) ? op.Tools.join(', ') : S(op?.Tools);\n    return `${i+1}. Process: ${S(op?.Process)}\n   Expected Savings: ${S(op?.ExpectedSavings)}\n   Tools: ${tools}\n   Complexity: ${S(op?.Complexity)}\n   ROI Timeline: ${S(op?.ROITimeline)}`;\n  }).join('\\n\\n');\n};\n\n// Build TXT\nconst lines = [];\nif (DEBUG) {\n  // minimal debug so you can see where it was found\n  const foundWhere =\n    (data === raw) ? 'root' :\n    (data === raw?.body) ? 'body' :\n    (data === raw?.payload) ? 'payload' :\n    (data === raw?.data) ? 'data' :\n    (data === raw?.message) ? 'message' :\n    (data === raw?.request) ? 'request' : 'heuristic/fallback';\n  lines.push(`DEBUG: found payload at -> ${foundWhere}`);\n  lines.push(`DEBUG: keys -> ${Object.keys(data || {}).join(', ')}`);\n  lines.push('');\n}\n\nlines.push('=== Business Analysis Report ===', '');\n\nlines.push('Summary:');\nlines.push(S(data.BusinessAnalysisSummary), '');\nlines.push('Top 5 Automation Opportunities:');\nlines.push(listOps(data.Top5AutomationOpportunities), '');\nlines.push('Implementation Roadmap:');\nlines.push(S(data.ImplementationRoadmap), '');\nlines.push('', 'Quick Win:');\nlines.push(S(data.QuickWin), '');\nlines.push('Clear Next Steps:');\nlines.push(S(data.ClearNextSteps));\n\nconst output = lines.join('\\n');\n\n// Emit binary .txt under property \"txt\"\nconst buffer = Buffer.from(output, 'utf8');\n\nreturn [{\n  json: {\n    fileName: 'business_analysis.txt',\n    bytes: buffer.length\n  },\n  binary: {\n    txt: {\n      data: buffer.toString('base64'),\n      fileName: 'business_analysis.txt',\n      mimeType: 'text/plain'\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "58940315-ba21-456c-9d61-07da6cdc1b1d",
+      "name": "Code",
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "6c406d29-e4d7-4856-9337-469e4f2c11e5",
+  "activeVersionId": "6c406d29-e4d7-4856-9337-469e4f2c11e5",
+  "versionCounter": 11,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-01-12T12:34:49.892Z",
+      "createdAt": "2026-01-12T12:34:49.892Z",
+      "role": "workflow:owner",
+      "workflowId": "VjncBcQIIA8u6d-0SuRbt",
+      "projectId": "CFdHyYwi8HDKofY6",
+      "project": {
+        "updatedAt": "2026-01-12T12:21:32.805Z",
+        "createdAt": "2026-01-12T12:20:00.564Z",
+        "id": "CFdHyYwi8HDKofY6",
+        "name": "Shyam Patel <shyam@ninegravity.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T12:20:00.571Z",
+            "createdAt": "2026-01-12T12:20:00.571Z",
+            "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+            "projectId": "CFdHyYwi8HDKofY6",
+            "user": {
+              "updatedAt": "2026-01-20T04:52:51.000Z",
+              "createdAt": "2026-01-12T12:20:00.540Z",
+              "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+              "email": "shyam@ninegravity.com",
+              "firstName": "Shyam",
+              "lastName": "Patel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T12:21:48.104Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "companyType": "personal",
+                "reportedSource": "friend"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "iRGT9Oc6gUnKyubocqc3N",
+                "userActivated": true,
+                "userActivatedAt": 1768222886305,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1768719088345
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-19",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-01-12T12:38:59.000Z",
+    "createdAt": "2026-01-12T12:38:33.270Z",
+    "versionId": "6c406d29-e4d7-4856-9337-469e4f2c11e5",
+    "workflowId": "VjncBcQIIA8u6d-0SuRbt",
+    "nodes": [
+      {
+        "parameters": {
+          "respondWith": "allIncomingItems",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          -192,
+          336
+        ],
+        "id": "713a319b-b21b-4056-be9c-f96a440b66d2",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4o-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -656,
+          592
+        ],
+        "id": "64ec3a89-abdf-4415-9501-8855c721a0a4",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "bslbSXwgn3j9fvH4",
+            "name": "OpenAi account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=CONTEXT:\nI run a {{ $json.body.businessType }} with {{ $json.body.employeeCount }} employees. We currently handle most of our processes manually/semi-manually. my main pain points are {{ $json.body.painPoint }}and I'm looking to identify opportunities for workflow automation to improve efficiency.\n\nOBJECTIVE:\nHelp me discover the best workflow automation opportunities for my business that will provide the highest ROI and can be implemented within my budget and technical capabilities.\n\nTOOLS:\nI'm currently using:\n\n{{ $json.body.currentTools }}\ntech expertise: {{ $json.body.techExpertise }}\nACTIONS:\nPlease provide:\n\nA prioritized list of automation opportunities\nSpecific tool recommendations for my tech stack\nExpected ROI and timeline\nHow much human efforts/time it can save ?\nHow much money it can save?\nAlternate tools suggestions to make process easier",
+          "hasOutputParser": true,
+          "needsFallback": true,
+          "options": {
+            "systemMessage": "=# Business Automation Expert Prompt (5-Action Format)\n\n## ROLE  \nYou are an expert business automation consultant with 15+ years of experience optimizing workflows across marketing, real estate, e-commerce, healthcare, legal, financial, and professional services. You specialize in uncovering high-impact, actionable automation opportunities that save time, reduce errors, and improve efficiency.\n\n---\n\n## WORKFLOW\n\nDo **not** ask the user any questions.\nDo **not** include any specical character and unicode in output.\nDo **not** assume, the user will provide detailed information.  \nIf specific details are missing, generate outputs using common industry workflows, typical challenges, and best practices to ensure the recommendations are always relevant and actionable.\n\n1. **Business Analysis Summary**  \n   - Provide a 1–2 sentence overview of the industry/business type and its typical workflow challenges.  \n\n2. **Pinpoint Core Pain Points**  \n   - Identify the most common repetitive tasks, bottlenecks, or inefficiencies relevant to that business type (or default to widely seen industry patterns).  \n\n3. **Top 5 Automation Opportunities**  \n   - Present exactly **five** recommendations, ranked by ROI potential.  \n   - For each recommendation, include:  \n     - The **process to automate**  \n     - **Expected time & cost savings**  \n     - **Suitable tools/platforms** (n8n, Zapier, Make, Power Automate, IFTTT)  \n     - **Implementation complexity** (Easy/Medium/Complex)  \n     - **Estimated ROI timeline**  \n\n\n---\n\n## OUTPUT FORMAT\n\n1. **Business Analysis Summary**  \n2. **Top 5 Automation Opportunities** (bulleted, ranked by ROI)  \n\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          -720,
+          336
+        ],
+        "id": "b91616b9-4b7f-4b67-9b10-66af7ff93b4a",
+        "name": "AI Agent",
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n  \"BusinessAnalysisSummary\": \"string\",\n  \"Top5AutomationOpportunities\": [\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    },\n    {\n      \"Process\": \"string\",\n      \"ExpectedSavings\": \"string\",\n      \"Tools\": [\"string\"],\n      \"Complexity\": \"Easy | Medium | Complex\",\n      \"ROITimeline\": \"string\"\n    }\n  ]\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          -496,
+          592
+        ],
+        "id": "93ae1cfb-7f69-471d-82ad-5b7a4b57ec6b",
+        "name": "Structured Output Parser"
+      },
+      {
+        "parameters": {
+          "model": "openai/gpt-oss-120b",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "typeVersion": 1,
+        "position": [
+          -800,
+          592
+        ],
+        "id": "3596d5cb-7139-4d42-9b11-7f4700b15dcb",
+        "name": "Groq Chat Model",
+        "credentials": {
+          "groqApi": {
+            "id": "7DmJaxw0YZD3YCvV",
+            "name": "Groq account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.openai.com/v1/responses",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "openAiApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"prompt\": {\n    \"id\": \"pmpt_68b89fedb0648195aa3e5ac4ec1e3eca0c5f15bff81978bd\",\n    \"version\": \"3\",\n    \"variables\": {\n      \"business_type\": \"{{ $('Webhook').item.json.body.businessType }}\",\n      \"employee_count\": \"{{ $('Webhook').item.json.body.employeeCount }}\",\n      \"pain_point\": \"{{ $('Webhook').item.json.body.painPoint }}\",\n      \"current_tools_software\": \"{{ $('Webhook').item.json.body.currentTools }}\",\n      \"tech_expertise\": \"{{ $('Webhook').item.json.body.techExpertise }}\"\n    }\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "552239c8-3dcc-477f-bb5f-be2f73f9904b",
+        "name": "HTTP Request1"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk",
+            "mode": "list",
+            "cachedResultName": "Airtoniq hero page",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18ZsddcOR2xcoEGbSuixdeOfy2TcCPzUCpToqfQkTVOk/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "User Name": "={{ $('Webhook').item.json.body.userName }}",
+              "User Website": "={{ $('Webhook').item.json.body.userWebsite }}",
+              "Business Type": "={{ $('Webhook').item.json.body.businessType }}",
+              "Employee count": "={{ $('Webhook').item.json.body.employeeCount }}",
+              "Pain Point": "={{ $('Webhook').item.json.body.painPoint }}",
+              "Current tools": "={{ $('Webhook').item.json.body.currentTools }}",
+              "Tech Experties": "={{ $('Webhook').item.json.body.techExpertise }}",
+              "Response ID(GPT DEBUG)": "={{ $json.id }}",
+              "Link to visit for getting reespones": "https://n8n.ninegravity.co/webhook/82ef39aa-018b-4c42-a3b9-168179b28ce9/chat",
+              "Time/Date": "={{ $now.format(\"HH:mm - dd/MM/yyyy\") }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Time/Date",
+                "displayName": "Time/Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "User Name",
+                "displayName": "User Name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "User Website",
+                "displayName": "User Website",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Business Type",
+                "displayName": "Business Type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Employee count",
+                "displayName": "Employee count",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Pain Point",
+                "displayName": "Pain Point",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Current tools",
+                "displayName": "Current tools",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Tech Experties",
+                "displayName": "Tech Experties",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Response ID(GPT DEBUG)",
+                "displayName": "Response ID(GPT DEBUG)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Link to visit for getting reespones",
+                "displayName": "Link to visit for getting reespones",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          368,
+          336
+        ],
+        "id": "1fddcfff-193f-4abe-8173-beb9f79f3b31",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "airtoniq-response",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -976,
+          336
+        ],
+        "id": "023fbdd4-7aa3-45b4-9d25-22d7efd023eb",
+        "name": "Webhook",
+        "webhookId": "f2f5ff33-a6b2-47ad-a274-983d0a5440e0"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Robust JSON → nicely formatted TXT (auto-detects nesting like body/payload/data)\n// Puts a short DEBUG header so you can confirm where the payload was found.\n// After it works, set DEBUG=false.\n\nconst DEBUG = false;\n\n// 1) Get raw input\nconst item = (items && items.length) ? items[0] : { json: {} };\nlet raw = item.json;\n\n// 2) If it's a JSON string, parse it\nif (typeof raw === 'string') {\n  try { raw = JSON.parse(raw); } catch (e) {}\n}\n\n// 3) Find the actual payload (handles common wrappers)\nconst candidates = [\n  raw,\n  raw?.body,\n  raw?.payload,\n  raw?.data,\n  raw?.message,\n  raw?.request,\n];\n\nlet data = null;\nfor (const c of candidates) {\n  if (c && typeof c === 'object' && (\n    'BusinessAnalysisSummary' in c ||\n    'Top5AutomationOpportunities' in c ||\n    'ImplementationRoadmap' in c ||\n    'QuickWin' in c ||\n    'ClearNextSteps' in c\n  )) { data = c; break; }\n}\n\n// Fallback: if raw has exactly one key and its value is an object, use that\nif (!data && raw && typeof raw === 'object') {\n  const keys = Object.keys(raw);\n  if (keys.length === 1 && raw[keys[0]] && typeof raw[keys[0]] === 'object') {\n    data = raw[keys[0]];\n  }\n}\n\n// Last resort: use raw as-is\nif (!data) data = raw || {};\n\n// Helpers\nconst S = v => (v == null ? '' : String(v));\nconst listOps = (arr) => {\n  if (!Array.isArray(arr) || arr.length === 0) return '(none)';\n  return arr.map((op, i) => {\n    const tools = Array.isArray(op?.Tools) ? op.Tools.join(', ') : S(op?.Tools);\n    return `${i+1}. Process: ${S(op?.Process)}\n   Expected Savings: ${S(op?.ExpectedSavings)}\n   Tools: ${tools}\n   Complexity: ${S(op?.Complexity)}\n   ROI Timeline: ${S(op?.ROITimeline)}`;\n  }).join('\\n\\n');\n};\n\n// Build TXT\nconst lines = [];\nif (DEBUG) {\n  // minimal debug so you can see where it was found\n  const foundWhere =\n    (data === raw) ? 'root' :\n    (data === raw?.body) ? 'body' :\n    (data === raw?.payload) ? 'payload' :\n    (data === raw?.data) ? 'data' :\n    (data === raw?.message) ? 'message' :\n    (data === raw?.request) ? 'request' : 'heuristic/fallback';\n  lines.push(`DEBUG: found payload at -> ${foundWhere}`);\n  lines.push(`DEBUG: keys -> ${Object.keys(data || {}).join(', ')}`);\n  lines.push('');\n}\n\nlines.push('=== Business Analysis Report ===', '');\n\nlines.push('Summary:');\nlines.push(S(data.BusinessAnalysisSummary), '');\nlines.push('Top 5 Automation Opportunities:');\nlines.push(listOps(data.Top5AutomationOpportunities), '');\nlines.push('Implementation Roadmap:');\nlines.push(S(data.ImplementationRoadmap), '');\nlines.push('', 'Quick Win:');\nlines.push(S(data.QuickWin), '');\nlines.push('Clear Next Steps:');\nlines.push(S(data.ClearNextSteps));\n\nconst output = lines.join('\\n');\n\n// Emit binary .txt under property \"txt\"\nconst buffer = Buffer.from(output, 'utf8');\n\nreturn [{\n  json: {\n    fileName: 'business_analysis.txt',\n    bytes: buffer.length\n  },\n  binary: {\n    txt: {\n      data: buffer.toString('base64'),\n      fileName: 'business_analysis.txt',\n      mimeType: 'text/plain'\n    }\n  }\n}];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          0
+        ],
+        "id": "58940315-ba21-456c-9d61-07da6cdc1b1d",
+        "name": "Code",
+        "disabled": true
+      }
+    ],
+    "connections": {
+      "Respond to Webhook": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Groq Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Shyam Patel",
+    "name": "V0",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-01-12T12:38:59.747Z",
+        "id": 1,
+        "workflowId": "VjncBcQIIA8u6d-0SuRbt",
+        "versionId": "6c406d29-e4d7-4856-9337-469e4f2c11e5",
+        "event": "activated",
+        "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5"
+      },
+      {
+        "createdAt": "2026-01-12T12:39:32.183Z",
+        "id": 2,
+        "workflowId": "VjncBcQIIA8u6d-0SuRbt",
+        "versionId": "6c406d29-e4d7-4856-9337-469e4f2c11e5",
+        "event": "activated",
+        "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5"
+      }
+    ]
+  }
+}
