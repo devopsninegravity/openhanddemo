@@ -1,0 +1,1133 @@
+{
+  "updatedAt": "2026-01-20T09:39:46.865Z",
+  "createdAt": "2026-01-19T09:26:00.940Z",
+  "id": "e1Pf1rBdDTx96U11mvUDo",
+  "name": "Linkedin_all_post_type",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2caebe7c-a2d3-428e-b129-fcfbe66854e5",
+              "name": "post_type",
+              "value": "video",
+              "type": "string"
+            },
+            {
+              "id": "c4578992-d24a-4666-b369-ae9f8c91aaec",
+              "name": "node_type",
+              "value": "linkedin",
+              "type": "string"
+            },
+            {
+              "id": "a17a5c94-d9ae-44f8-9d56-fb55d17efe5a",
+              "name": "image_url",
+              "value": "https://media.licdn.com/dms/image/v2/D4D03AQHf-K7ergkUwQ/profile-displayphoto-shrink_800_800/B4DZbdtDouHQAg-/0/1747476298728?e=1753920000&v=beta&t=Js1KDjpDYOgzYW4YlhwT1_ZmbggoSIxjcq3IA0rRJs0",
+              "type": "string"
+            },
+            {
+              "id": "32aa1561-458c-4f64-a854-eab65f9ad1dd",
+              "name": "video_url",
+              "value": "https://videos.pexels.com/video-files/4434242/4434242-sd_360_640_24fps.mp4",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        960
+      ],
+      "id": "b4eb8dd2-8185-4976-aaf0-8ef7944b93af",
+      "name": "Configure Post Settings"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Configure Post Settings').item.json.post_type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ab388a77-1660-4a64-ba58-bc405444dbd5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "be8816f5-ae68-48c3-869e-bc67078298d8",
+                    "leftValue": "={{ $('Configure Post Settings').item.json.post_type }}",
+                    "rightValue": "article",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Article"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "abb2fd36-d2c5-479d-bb6e-e201a6d20d05",
+                    "leftValue": "={{ $('Configure Post Settings').item.json.post_type }}",
+                    "rightValue": "article_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Article Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "663bacc8-ceeb-4f81-b058-c379eaf6e717",
+                    "leftValue": "={{ $('Configure Post Settings').item.json.post_type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "99441a51-906e-469a-b98e-64aa43c996ba",
+                    "leftValue": "={{ $('Configure Post Settings').item.json.post_type }}",
+                    "rightValue": "video",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        304,
+        928
+      ],
+      "id": "c9975848-8339-44f1-9dfd-b6b4851d17d9",
+      "name": "Smart Content Router"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"author\": \"urn:li:person:{{ $json.sub }}\",\n    \"lifecycleState\": \"PUBLISHED\",\n    \"specificContent\": {\n        \"com.linkedin.ugc.ShareContent\": {\n            \"shareCommentary\": {\n                \"text\": \"This is my automate API Post\"\n            },\n            \"shareMediaCategory\": \"NONE\"   \n        }\n    },\n    \"visibility\": {\n        \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        304
+      ],
+      "id": "c0667d55-2e35-4f70-9abd-ea0c35488842",
+      "name": "Text Post"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"author\": \"urn:li:person:{{ $json.sub }}\",\n    \"lifecycleState\": \"PUBLISHED\",\n    \"specificContent\": {\n        \"com.linkedin.ugc.ShareContent\": {\n            \"shareCommentary\": {\n                \"text\": \"Learning more about LinkedIn by reading the LinkedIn Blog!\"\n            },\n            \"shareMediaCategory\": \"ARTICLE\",\n            \"media\": [\n                {\n                    \"status\": \"READY\",\n                    \"description\": {\n                        \"text\": \"Now you can Automate All Instagram Post\"\n                    },\n                    \"originalUrl\": \"https://youtu.be/t63IlcH1GJY?si=V94VitNWyNNvk7WR\",\n                    \"title\": {\n                        \"text\": \"Automate All Instagram Post\"\n                    }\n                }\n            ]\n        }\n    },\n    \"visibility\": {\n        \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        640
+      ],
+      "id": "56e74407-69a0-489a-96bc-27e27941d8bb",
+      "name": "Article Post"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"author\": \"urn:li:person:{{ $json.sub }}\",\n    \"lifecycleState\": \"PUBLISHED\",\n    \"specificContent\": {\n        \"com.linkedin.ugc.ShareContent\": {\n            \"shareCommentary\": {\n                \"text\": \"Let's Automate All Instagram Post Type\"\n            },\n            \"shareMediaCategory\": \"ARTICLE\",\n            \"media\": [\n                {\n                    \"status\": \"READY\",\n                    \"description\": {\n                        \"text\": \"Now you can Automate All Instagram Post\"\n                    },\n                    \"originalUrl\": \"https://youtu.be/t63IlcH1GJY?si=V94VitNWyNNvk7WR\",\n                    \"title\": {\n                        \"text\": \"Automate All Instagram Post\"\n                    },\n                    \"thumbnails\": [{\n                        \"url\": \"https://i.ytimg.com/vi/t63IlcH1GJY/hq720.jpg\"\n                    }]\n                }\n            ]\n        }\n    },\n    \"visibility\": {\n        \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        1056
+      ],
+      "id": "c7c73e4a-3e5e-4a97-8d89-5038d69315d8",
+      "name": "Article with Image"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/assets?action=registerUpload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"registerUploadRequest\": {\n        \"recipes\": [\n            \"urn:li:digitalmediaRecipe:feedshare-image\"\n        ],\n        \"owner\": \"urn:li:person:{{ $json.sub }}\",\n        \"serviceRelationships\": [\n            {\n                \"relationshipType\": \"OWNER\",\n                \"identifier\": \"urn:li:userGeneratedContent\"\n            }\n        ]\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1184,
+        1296
+      ],
+      "id": "be262faa-b226-49ba-8867-7b5228f1c9d1",
+      "name": "Register Image Upload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/assets?action=registerUpload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"registerUploadRequest\": {\n        \"recipes\": [\n            \"urn:li:digitalmediaRecipe:feedshare-video\"\n        ],\n        \"owner\": \"urn:li:person:{{ $json.sub }}\",\n        \"serviceRelationships\": [\n            {\n                \"relationshipType\": \"OWNER\",\n                \"identifier\": \"urn:li:userGeneratedContent\"\n            }\n        ]\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        1728
+      ],
+      "id": "1c31b309-6dad-434d-b711-6b7c8a8d1fc2",
+      "name": "Register Video Upload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1568,
+        1296
+      ],
+      "id": "3f5b5e5a-119c-4723-9e4d-12cd6fd2ebf5",
+      "name": "Upload Image File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"author\": \"urn:li:person:{{ $('Get UserID5').item.json.sub }}\",\n    \"lifecycleState\": \"PUBLISHED\",\n    \"specificContent\": {\n        \"com.linkedin.ugc.ShareContent\": {\n            \"shareCommentary\": {\n                \"text\": \"Now this is how we automate the image posting\"\n            },\n            \"shareMediaCategory\": \"IMAGE\",\n            \"media\": [\n                {\n                    \"status\": \"READY\",\n                    \"description\": {\n                        \"text\": \"Center stage!\"\n                    },\n                    \"media\": \"{{ $('Register Image Upload').item.json.value.asset }}\",\n                    \"title\": {\n                        \"text\": \"I don't know where this text come\"\n                    }\n                }\n            ]\n        }\n    },\n    \"visibility\": {\n        \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n    }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        1296
+      ],
+      "id": "432d24f5-5669-46b0-8cb6-745f0f86bf35",
+      "name": "Linkedin Image Post"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Configure Post Settings').item.json.video_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1344,
+        1728
+      ],
+      "id": "e18cfc09-57bb-434a-8f73-edf4b4d29024",
+      "name": "Download Video"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        1728
+      ],
+      "id": "611a05b7-29fa-4bfd-9989-8f9fbaabc45a",
+      "name": "Upload Video File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"author\": \"urn:li:person:{{ $('Get UserID6').item.json.sub }}\",\n    \"lifecycleState\": \"PUBLISHED\",\n    \"specificContent\": {\n        \"com.linkedin.ugc.ShareContent\": {\n            \"shareCommentary\": {\n                \"text\": \"Now this is how we automate the Video posting\"\n            },\n            \"shareMediaCategory\": \"VIDEO\",\n            \"media\": [\n                {\n                    \"status\": \"READY\",\n                    \"description\": {\n                        \"text\": \"Center stage!\"\n                    },\n                    \"media\": \"{{ $('Register Video Upload').item.json.value.asset }}\",\n                    \"title\": {\n                        \"text\": \"I don't know where this text come\"\n                    }\n                }\n            ]\n        }\n    },\n    \"visibility\": {\n        \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n    }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        1728
+      ],
+      "id": "9fa49784-d59d-4a00-894e-b98728da7399",
+      "name": "Linkedin Video Post"
+    },
+    {
+      "parameters": {
+        "content": "## 🚀 LinkedIn Multi-Format Post Automation\n**Automate ALL LinkedIn post types with one workflow!**\n\n✅ **Supported Post Types:**\n- 📝 Text-only posts\n- 📰 Article sharing  \n- 🖼️ Article with custom thumbnail\n- 📸 Single image posts\n- 🎥 Video posts\n\n🎯 **Perfect for:** Content creators, marketers, social media managers\n⚡ **One-click posting** to LinkedIn with professional formatting",
+        "height": 320,
+        "width": 560,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -144
+      ],
+      "id": "0cab321a-671b-4706-be06-bec039456e89",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Post Configuration Center\n**Customize your content here before posting**\n\n📋 **Required Settings:**\n- `post_type` → Choose: text, article, article_image, image, video\n- `image_url` → Direct link to image file  \n- `video_url` → Direct link to video file\n\n🔧 **Quick Setup:** Just modify the \"Configure Post Settings\" node values",
+        "height": 620,
+        "width": 640,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        656
+      ],
+      "id": "2d843759-e26e-407a-a0c4-03cf61e1b6f3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 Intelligent Content Router\n**Automatically detects post type and routes to correct processing**\n",
+        "height": 620,
+        "width": 360,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        192,
+        656
+      ],
+      "id": "72792ed7-6b2b-464f-8200-34e8b94e28d8",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 📸 Image Posting",
+        "height": 360,
+        "width": 1240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        1248
+      ],
+      "id": "61f9df19-8c8f-4061-9ae4-74644334792a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 🎬 Video Posting",
+        "height": 300,
+        "width": 1240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        1648
+      ],
+      "id": "90fa7289-e4ee-4056-9363-ab7aaaf5785c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Configure Post Settings').item.json.image_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        1296
+      ],
+      "id": "0add786a-8445-4cc7-b5cf-4a459fc58cb3",
+      "name": "Download Image"
+    },
+    {
+      "parameters": {
+        "content": "## 📸 Article with Thumbnail Posting",
+        "height": 220,
+        "width": 1000
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        1008
+      ],
+      "id": "1e151a8f-a63a-4b25-951a-485df168b5f8",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 📸 Article Posting",
+        "height": 340,
+        "width": 1000
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        624
+      ],
+      "id": "7ea1e486-036a-44d8-ad98-90bda6b40908",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## 📸 Text Posting",
+        "height": 320,
+        "width": 1000
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        288
+      ],
+      "id": "b88650f1-7338-4548-a4fb-86651bd5d5f7",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "person": "QyGjon0PYg",
+        "text": "Automated post",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        464
+      ],
+      "id": "392cb82d-d7d3-4f2e-b61c-b7640c90f833",
+      "name": "Text Post Linkedin"
+    },
+    {
+      "parameters": {
+        "person": "QyGjon0PYg",
+        "text": "Automated post",
+        "shareMediaCategory": "ARTICLE",
+        "additionalFields": {
+          "description": "Now you can Automate All Instagram Post",
+          "originalUrl": "https://youtu.be/t63IlcH1GJY?si=V94VitNWyNNvk7WR",
+          "title": "Automate All Instagram Post"
+        }
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        800
+      ],
+      "id": "e1dec071-166b-4a9b-8b00-c20b3d774c57",
+      "name": "Text Post Linkedin1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "465dee68-878c-46de-8dd8-ba29e8bb93d3",
+              "leftValue": "={{ $('Configure Post Settings').item.json.node_type }}",
+              "rightValue": "http",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        384
+      ],
+      "id": "1abb3b08-95c1-473a-9c8e-b8b81e0f989c",
+      "name": "Text If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "465dee68-878c-46de-8dd8-ba29e8bb93d3",
+              "leftValue": "={{ $('Configure Post Settings').item.json.node_type }}",
+              "rightValue": "http",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        704
+      ],
+      "id": "2399fea8-6f97-4906-9e6d-ad0480531f18",
+      "name": "Article if"
+    },
+    {
+      "parameters": {
+        "person": "QyGjon0PYg",
+        "text": "Automated post",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {
+          "title": "Automate All Instagram Post"
+        }
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        1456
+      ],
+      "id": "50f27427-b44a-4782-81dc-f513c95f63a0",
+      "name": "Image Post Linkedin"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Configure Post Settings').item.json.image_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        1456
+      ],
+      "id": "a85eab92-deda-42ff-8fbf-9732e8997300",
+      "name": "Download Imagee"
+    },
+    {
+      "parameters": {
+        "url": "https://api.linkedin.com/v2/userinfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1184,
+        304
+      ],
+      "id": "f7ae5188-2450-4ad5-9b13-4469be9fe163",
+      "name": "Get UserID2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "qCdV8CBOXK8VD9VZ",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.linkedin.com/v2/userinfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1184,
+        640
+      ],
+      "id": "cbb1c5e3-39c7-4e28-a7a2-d708a13ad62b",
+      "name": "Get UserID3"
+    },
+    {
+      "parameters": {
+        "url": "https://api.linkedin.com/v2/userinfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1024,
+        1056
+      ],
+      "id": "01e4ec47-0398-4f8a-89bb-32880c600855",
+      "name": "Get UserID4"
+    },
+    {
+      "parameters": {
+        "url": "https://api.linkedin.com/v2/userinfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        992,
+        1296
+      ],
+      "id": "5a274b2c-911d-4f8b-ae19-3ceee59887fb",
+      "name": "Get UserID5"
+    },
+    {
+      "parameters": {
+        "url": "https://api.linkedin.com/v2/userinfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        864,
+        1728
+      ],
+      "id": "0630136a-8619-4f6d-a762-b0d5740f5a73",
+      "name": "Get UserID6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        960
+      ],
+      "id": "6dfe7288-a413-4af6-81fa-8ec3d380098f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "465dee68-878c-46de-8dd8-ba29e8bb93d3",
+              "leftValue": "={{ $('Configure Post Settings').item.json.node_type }}",
+              "rightValue": "http",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        1360
+      ],
+      "id": "0972ba60-5237-4901-8662-61ca8ba45236",
+      "name": "Image if"
+    }
+  ],
+  "connections": {
+    "Configure Post Settings": {
+      "main": [
+        [
+          {
+            "node": "Smart Content Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Content Router": {
+      "main": [
+        [
+          {
+            "node": "Text If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Article if",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get UserID4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image if",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get UserID6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Image Upload": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image File": {
+      "main": [
+        [
+          {
+            "node": "Linkedin Image Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Video Upload": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Upload Video File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video File": {
+      "main": [
+        [
+          {
+            "node": "Linkedin Video Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Upload Image File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text If": {
+      "main": [
+        [
+          {
+            "node": "Get UserID2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Post Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article if": {
+      "main": [
+        [
+          {
+            "node": "Get UserID3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Post Linkedin1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Imagee": {
+      "main": [
+        [
+          {
+            "node": "Image Post Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UserID2": {
+      "main": [
+        [
+          {
+            "node": "Text Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UserID3": {
+      "main": [
+        [
+          {
+            "node": "Article Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UserID4": {
+      "main": [
+        [
+          {
+            "node": "Article with Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UserID5": {
+      "main": [
+        [
+          {
+            "node": "Register Image Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UserID6": {
+      "main": [
+        [
+          {
+            "node": "Register Video Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Configure Post Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image if": {
+      "main": [
+        [
+          {
+            "node": "Get UserID5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Imagee",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "16eb4ffc-22fc-456a-8725-bdebb6ff7278",
+  "activeVersionId": null,
+  "versionCounter": 4,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-01-19T09:26:00.961Z",
+      "createdAt": "2026-01-19T09:26:00.961Z",
+      "role": "workflow:owner",
+      "workflowId": "e1Pf1rBdDTx96U11mvUDo",
+      "projectId": "aDl9WwKN0ta9uBVo",
+      "project": {
+        "updatedAt": "2026-01-12T11:51:24.516Z",
+        "createdAt": "2026-01-12T11:51:06.144Z",
+        "id": "aDl9WwKN0ta9uBVo",
+        "name": "Owner Owner <admin@vmi2632825.contaboserver.net>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T11:51:06.144Z",
+            "createdAt": "2026-01-12T11:51:06.144Z",
+            "userId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+            "projectId": "aDl9WwKN0ta9uBVo",
+            "user": {
+              "updatedAt": "2026-01-20T05:00:53.000Z",
+              "createdAt": "2026-01-12T11:51:05.224Z",
+              "id": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+              "email": "admin@vmi2632825.contaboserver.net",
+              "firstName": "Owner",
+              "lastName": "Owner",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T11:59:17.141Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "automationGoalDevops": [
+                  "cloud-infrastructure-orchestration",
+                  "ci-cd",
+                  "data-syncing",
+                  "incident-response",
+                  "monitoring-alerting",
+                  "reporting",
+                  "ticketing-systems-integrations"
+                ],
+                "companyType": "saas",
+                "role": "devops"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nYPf4T1dFw_BwSQbc0GME",
+                "userActivatedAt": 1768222892386,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1768571009887
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-20",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-01-12T12:42:56.579Z",
+      "createdAt": "2026-01-12T12:42:56.579Z",
+      "id": "kCtEVGL0Y2rP29Fo",
+      "name": "By: Mihir"
+    }
+  ],
+  "activeVersion": null
+}
