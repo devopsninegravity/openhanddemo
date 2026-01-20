@@ -1,0 +1,2109 @@
+{
+  "updatedAt": "2026-01-19T06:24:43.683Z",
+  "createdAt": "2026-01-12T12:58:56.580Z",
+  "id": "iRGT9Oc6gUnKyubocqc3N",
+  "name": "Employee estimatioin to sorted sheet",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('URLHERE').item.json.URL }}",
+          "mode": "url",
+          "__regex": "https:\\/\\/(?:drive|docs)\\.google\\.com(?:\\/.*|)\\/d\\/([0-9a-zA-Z\\-_]+)(?:\\/.*|)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Planning",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        880
+      ],
+      "id": "84c809fb-8328-41f7-b55b-1e18789c183f",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// HTML TASK SCHEDULING ENGINE (n8n)\n// with Task Total Hours column\n// ======================================\n\n// Config\nconst DAILY_CAPACITY = 8;\n\n// State\nlet day = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\n// Output\nconst timeline = [];\n\n// Loop through tasks (input items)\nfor (const item of items) {\n  const task = item.json.Page;\n  const taskTotalHours = Number(item.json[\"HTML Estimation\"]);\n  let remainingTaskHours = taskTotalHours;\n\n  if (!taskTotalHours || taskTotalHours <= 0) continue;\n\n  while (remainingTaskHours > 0) {\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${day}`,\n      Task: task,\n      \"Task Total Hours\": taskTotalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      day += 1;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// Return as n8n items\nreturn timeline.map(row => ({ json: row }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        1104
+      ],
+      "id": "57eb9ec8-e286-4157-8395-2945c1e3f5cb",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// HTML TASK SCHEDULING ENGINE (n8n)\n// with Task Total Hours column\n// ======================================\n\n// Config\nconst DAILY_CAPACITY = 8;\n\n// State\nlet day = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\n// Output\nconst timeline = [];\n\n// Loop through tasks (input items)\nfor (const item of items) {\n  const task = item.json.Page;\n  const taskTotalHours = Number(item.json[\"Dev Estimation\"]);\n  let remainingTaskHours = taskTotalHours;\n\n  if (!taskTotalHours || taskTotalHours <= 0) continue;\n\n  while (remainingTaskHours > 0) {\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${day}`,\n      Task: task,\n      \"Task Total Hours\": taskTotalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      day += 1;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// Return as n8n items\nreturn timeline.map(row => ({ json: row }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        1552
+      ],
+      "id": "41f0043a-a992-4f0f-bd28-461debc2b7ad",
+      "name": "Code in JavaScript1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('URLHERE').item.json.URL }}",
+          "mode": "url"
+        },
+        "title": "Dev Estimations",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        496
+      ],
+      "id": "0a2f891a-7846-4a4e-bed6-d25cb32b83ec",
+      "name": "Create sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('URLHERE').item.json.URL }}",
+          "mode": "url"
+        },
+        "title": "HTML Estimations",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        304
+      ],
+      "id": "f10c5c40-f72d-4186-b105-cf9e8885e913",
+      "name": "Create sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7e32054f-a80a-4cc5-b01a-b56c635d382c",
+              "name": "URL",
+              "value": "={{ $('On form submission').item.json.URL }}",
+              "type": "string"
+            },
+            {
+              "id": "ee9973bd-eae8-40db-b874-5a6db10bce36",
+              "name": "Date",
+              "value": "={{ $json.submittedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        592
+      ],
+      "id": "48c468de-51a2-4609-b741-39da4c8180ea",
+      "name": "URLHERE"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// MASTER MAPPING CODE NODE\n// - No Set node\n// - Normalizes fields\n// - Computes Date from startDate + Day\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Transform ALL items ----------\nreturn items\n  // ignore rows where no real work happened\n  .filter(item => Number(item.json[\"workedHours   \"]) > 0)\n  .map(item => {\n    const j = item.json;\n\n    // ---- Required fields ----\n    const startDateStr = j.startDate;\n    const dayLabel = j[\"day \"];\n\n    if (!startDateStr || !dayLabel) {\n      throw new Error(\"Missing startDate or day field\");\n    }\n\n    // Extract day number from \"Day X\"\n    const dayNumber = Number(dayLabel.replace(\"Day\", \"\").trim());\n    if (isNaN(dayNumber)) {\n      throw new Error(`Invalid Day value: ${dayLabel}`);\n    }\n\n    // ---- Date calculation ----\n    const startDate = parseDDMMYY(startDateStr);\n    const resultDate = new Date(startDate);\n    resultDate.setDate(startDate.getDate() + (dayNumber - 1));\n\n    // ---- Final normalized output ----\n    return {\n      json: {\n        Day: dayLabel.trim(),\n        Date: formatDDMMYY(resultDate),\n\n        Task: j[\"task          \"]?.trim() ?? null,\n        \"Task Total Hours\": j[\"taskTotal     \"] ?? null,\n        \"Worked Hours\": j[\"workedHours   \"] ?? null,\n\n        \"Task Remaining After\": j[\"Task Remaining After\"] ?? null,\n        \"Day Remaining After\": j[\"Day Remaining After\"] ?? null\n      }\n    };\n  });\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        1328
+      ],
+      "id": "89a191cc-cb89-4c4b-85b4-674e5558193f",
+      "name": "Code in JavaScript2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU",
+          "mode": "list",
+          "cachedResultName": "Calendar Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        688
+      ],
+      "id": "1404c122-377b-4e26-b6ed-4e1792514ab2",
+      "name": "Calendar sheet1",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a60cdaea-1112-4abc-be98-fb062a058cbd",
+              "name": "startDate",
+              "value": "={{ $('Code in JavaScript4').first().json.ProjectStartDate }}",
+              "type": "string"
+            },
+            {
+              "id": "d3e59f96-6393-4df2-a80f-d5ca46144397",
+              "name": "day ",
+              "value": "={{ $('Code in JavaScript1').item.json.Day }}",
+              "type": "string"
+            },
+            {
+              "id": "a223faf6-8cd1-4edf-baf5-6ed56b5d3156",
+              "name": "task          ",
+              "value": "={{ $('Code in JavaScript1').item.json.Task }}",
+              "type": "string"
+            },
+            {
+              "id": "05e5853d-b10f-43c2-85f3-957fb36eea41",
+              "name": "taskTotal     ",
+              "value": "={{ $('Code in JavaScript1').item.json[\"Task Total Hours\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "6353aade-1738-4155-a9d8-0810c82cd34f",
+              "name": "workedHours   ",
+              "value": "={{ $('Code in JavaScript1').item.json[\"Worked Hours\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "2d26f236-553f-496d-91a8-ae97eaa04f94",
+              "name": "calendarDate  ",
+              "value": "={{ $('Calendar sheet1').first().json.Date }}\n",
+              "type": "string"
+            },
+            {
+              "id": "46f65dea-36bc-47bf-91a0-c858f75a9500",
+              "name": "capacity      ",
+              "value": "={{ $('Calendar sheet1').first().json.Capacity }}\n",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        1776
+      ],
+      "id": "e6a3947e-b892-49ee-aaae-10beb60d2998",
+      "name": "Edit Fields2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// DATE MAPPING FROM startDate + Day N\n// Compatible with n8n Code node\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Process ALL items ----------\nreturn items.map((item) => {\n  const json = item.json;\n\n  const startDateStr = json.startDate;\n  const dayLabel = json[\"day \"]; // ⚠️ trailing space keys\n\n  if (!startDateStr || !dayLabel) {\n    throw new Error(\"Missing startDate or day\");\n  }\n\n  // Extract number from \"Day 12\"\n  const dayNumber = Number(dayLabel.replace(\"Day\", \"\").trim());\n\n  if (isNaN(dayNumber)) {\n    throw new Error(`Invalid day format: ${dayLabel}`);\n  }\n\n  // Calculate date\n  const startDate = parseDDMMYY(startDateStr);\n  const resultDate = new Date(startDate);\n  resultDate.setDate(startDate.getDate() + (dayNumber - 1));\n\n  return {\n    json: {\n      Day: dayLabel.trim(),\n      Date: formatDDMMYY(resultDate),\n      Task: json[\"task          \"].trim(),\n      \"Task Total Hours\": json[\"taskTotal     \"],\n      \"Worked Hours\": json[\"workedHours   \"]\n      \n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1776
+      ],
+      "id": "cbdd65b0-fc8d-459d-bf84-26280d070101",
+      "name": "Code in JavaScript3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('URLHERE').first().json.URL }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "HTML Estimations",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Day",
+              "displayName": "Day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Task",
+              "displayName": "Task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Task Total Hours",
+              "displayName": "Task Total Hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Worked Hours",
+              "displayName": "Worked Hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Task Remaining After",
+              "displayName": "Task Remaining After",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day Remaining After",
+              "displayName": "Day Remaining After",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        688
+      ],
+      "id": "31508bff-f0d6-491f-806d-691fee91b77f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Form",
+        "formDescription": "We'll get back to you soon",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "URL",
+              "fieldType": "textarea",
+              "placeholder": "sheet url here",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Project start Date",
+              "fieldType": "date",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -224,
+        592
+      ],
+      "id": "814f2b3d-3acd-4ace-bdbb-0d51d075e271",
+      "name": "On form submission",
+      "webhookId": "c1e38919-3d2d-4e0e-af7b-ad8dba34ce54"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('URLHERE').first().json.URL }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Dev Estimations",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        880
+      ],
+      "id": "86f52974-6a20-45d8-a9b0-4f9604ab6923",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// FINAL TIMELINE MAPPER\n// - Merges HTML + DEV timelines\n// - Maps Day -> Date using startDate\n// ======================================\n\n// ---------- CONFIG ----------\nconst START_DATE = \"07-01-26\"; // change later or make dynamic\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Logic ----------\nconst startDate = parseDDMMYY(START_DATE);\n\nreturn items.map(item => {\n  const row = item.json;\n\n  // Extract Day number\n  const dayNumber = Number(\n    String(row.Day).replace(\"Day\", \"\").trim()\n  );\n\n  if (isNaN(dayNumber)) {\n    throw new Error(`Invalid Day value: ${row.Day}`);\n  }\n\n  // Calculate date\n  const date = new Date(startDate);\n  date.setDate(startDate.getDate() + (dayNumber - 1));\n\n  return {\n    json: {\n      ...row,\n      Date: formatDDMMYY(date)\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1104
+      ],
+      "id": "b5783557-7965-44d0-a1fc-72eb6bd90bba",
+      "name": "Code in JavaScript5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// SINGLE NODE: SCHEDULING + DATE MAPPING\n// Uses merged Tasks + Calendar\n// Skips Capacity = 0 dates\n// ======================================\n\n// ---------- Helpers ----------\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Extract startDate from merged input ----------\nconst startDateItem = items.find(i => i.json.ProjectStartDate);\n\nif (!startDateItem) {\n  throw new Error(\"ProjectStartDate not found in merged input\");\n}\n\nconst startDate = parseDDMMYY(startDateItem.json.ProjectStartDate);\n\n\n\n// ---------- Separate merged data ----------\nconst tasks = [];\nconst calendar = [];\n\nfor (const item of items) {\n  const j = item.json;\n\n  // Task rows\n  if (j.Page && j[\"HTML Estimation\"] !== undefined) {\n    const hrs = Number(j[\"HTML Estimation\"]);\n    if (hrs > 0) {\n      tasks.push({\n        task: j.Page,\n        totalHours: hrs\n      });\n    }\n  }\n\n  // Calendar rows\n  if (j.Date && j.Capacity !== undefined) {\n    calendar.push({\n      date: parseDDMMYY(j.Date),\n      capacity: Number(j.Capacity)\n    });\n  }\n}\n\nif (!tasks.length) throw new Error(\"No task rows found\");\nif (!calendar.length) throw new Error(\"No calendar rows found\");\n\n// ---------- Prepare calendar (Capacity > 0 only) ----------\nconst usableDates = calendar\n  .filter(d => d.capacity > 0 && d.date >= startDate)\n  .map(d => d.date)\n  .sort((a, b) => a - b);\n\n\nif (!usableDates.length) {\n  throw new Error(\"No usable dates (all capacity = 0)\");\n}\n\n// ---------- Scheduling engine ----------\nconst DAILY_CAPACITY = 8;\nlet dayIndex = 0;\nlet dayNumber = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\nconst timeline = [];\n\nfor (const t of tasks) {\n  let remainingTaskHours = t.totalHours;\n\n  while (remainingTaskHours > 0) {\n    if (dayIndex >= usableDates.length) {\n      throw new Error(\"Not enough calendar dates to schedule all work\");\n    }\n\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${dayNumber}`,\n      Date: formatDDMMYY(usableDates[dayIndex]),\n      Task: t.task,\n      \"Task Total Hours\": t.totalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      dayIndex++;\n      dayNumber++;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// ---------- Output ----------\nreturn timeline.map(row => ({ json: row }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1232
+      ],
+      "id": "5c7f2fa7-0bbe-49a6-b37f-8b4dae4363fb",
+      "name": "Code in JavaScript6",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        672,
+        784
+      ],
+      "id": "b13bac80-08c7-46f3-801b-fd0a75a32f19",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// SINGLE NODE: SCHEDULING + DATE MAPPING\n// FIXED: Handles 2-digit years correctly (26 -> 2026)\n// OUTPUT DATE FORMAT: yyyy-MM-dd\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseAnyDate(str) {\n  if (!str) return null;\n\n  const parts = str.trim().split(\"-\").map(Number);\n  if (parts.length !== 3) return null;\n\n  let yyyy, mm, dd;\n\n  // yyyy-mm-dd\n  if (parts[0] > 31) {\n    [yyyy, mm, dd] = parts;\n  } \n  // dd-mm-yy OR dd-mm-yyyy\n  else {\n    [dd, mm, yyyy] = parts;\n    if (yyyy < 100) {\n      yyyy += 2000; // 🔥 FIX: 26 -> 2026\n    }\n  }\n\n  return new Date(yyyy, mm - 1, dd);\n}\n\nfunction formatYYYYMMDD(date) {\n  const yyyy = date.getFullYear();\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  return `${yyyy}-${mm}-${dd}`;\n}\n\n// ---------- Extract start date ----------\nconst startDateItem = items.find(i => i.json.ProjectStartDate);\nif (!startDateItem) {\n  throw new Error(\"ProjectStartDate not found\");\n}\n\nconst startDate = parseAnyDate(startDateItem.json.ProjectStartDate);\n\n// ---------- Separate merged data ----------\nconst tasks = [];\nconst calendar = [];\n\nfor (const item of items) {\n  const j = item.json;\n\n  // Task rows\n  if (j.Page && j[\"HTML Estimation\"] !== undefined) {\n    const hrs = Number(j[\"Dev Estimation\"]);\n    if (hrs > 0) {\n      tasks.push({\n        task: j.Page,\n        totalHours: hrs\n      });\n    }\n  }\n\n  // Calendar rows (dd-mm-yy / dd-mm-yyyy)\n  if (j.Date && j.Capacity !== undefined) {\n    const parsedDate = parseAnyDate(j.Date);\n    calendar.push({\n      date: parsedDate,\n      capacity: Number(j.Capacity)\n    });\n  }\n}\n\nif (!tasks.length) throw new Error(\"No task rows found\");\nif (!calendar.length) throw new Error(\"No calendar rows found\");\n\n// ---------- Prepare calendar ----------\nconst usableDates = calendar\n  .filter(d => d.capacity > 0 && d.date >= startDate)\n  .map(d => d.date)\n  .sort((a, b) => a - b);\n\nif (!usableDates.length) {\n  throw new Error(\"No usable dates after applying capacity and start date\");\n}\n\n// ---------- Scheduling engine ----------\nconst DAILY_CAPACITY = 8;\nlet dayIndex = 0;\nlet dayNumber = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\nconst timeline = [];\n\nfor (const t of tasks) {\n  let remainingTaskHours = t.totalHours;\n\n  while (remainingTaskHours > 0) {\n    if (dayIndex >= usableDates.length) {\n      throw new Error(\"Not enough calendar dates to schedule all work\");\n    }\n\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n    \n    timeline.push({\n      Day: `Day ${dayNumber}`,\n      Date: formatYYYYMMDD(usableDates[dayIndex]),\n      Task: t.task,\n      \"Task Total Hours\": `${t.totalHours} hours`,\n      \"Worked Hours\": `${worked} hours`,\n      \"Task Remaining After\": `${remainingTaskHours - worked} hours`,\n      \"Day Remaining After\": `${remainingDayHours - worked} hours`\n    });\n\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      dayIndex++;\n      dayNumber++;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// ---------- Output ----------\nreturn timeline.map(row => ({ json: row }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        880
+      ],
+      "id": "decd9c06-e6e6-4493-8744-34902645cf1f",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// Pass Through Project Start Date from Form\n// Input: \"Project start Date\"\n// Output: ProjectStartDate (unchanged)\n// ======================================\n\n// Read exact field name (with spaces)\nconst inputDate = $json[\"Project start Date\"];\n\nif (!inputDate) {\n  throw new Error(\"Project start Date not found in form submission\");\n}\n\n// No parsing, no formatting — pass as-is\nconst formattedDate = inputDate;\n\nreturn [\n  {\n    json: {\n      original: inputDate,\n      ProjectStartDate: formattedDate\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        1056
+      ],
+      "id": "f1e10bef-87c9-4428-83db-aff24ca5a52b",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================\n// SINGLE NODE: SCHEDULING + DATE MAPPING\n// FIXED: Handles 2-digit years correctly (26 -> 2026)\n// OUTPUT DATE FORMAT: yyyy-MM-dd\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseAnyDate(str) {\n  if (!str) return null;\n\n  const parts = str.trim().split(\"-\").map(Number);\n  if (parts.length !== 3) return null;\n\n  let yyyy, mm, dd;\n\n  // yyyy-mm-dd\n  if (parts[0] > 31) {\n    [yyyy, mm, dd] = parts;\n  } \n  // dd-mm-yy OR dd-mm-yyyy\n  else {\n    [dd, mm, yyyy] = parts;\n    if (yyyy < 100) {\n      yyyy += 2000; // 🔥 FIX: 26 -> 2026\n    }\n  }\n\n  return new Date(yyyy, mm - 1, dd);\n}\n\nfunction formatYYYYMMDD(date) {\n  const yyyy = date.getFullYear();\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  return `${yyyy}-${mm}-${dd}`;\n}\n\n// ---------- Extract start date ----------\nconst startDateItem = items.find(i => i.json.ProjectStartDate);\nif (!startDateItem) {\n  throw new Error(\"ProjectStartDate not found\");\n}\n\nconst startDate = parseAnyDate(startDateItem.json.ProjectStartDate);\n\n// ---------- Separate merged data ----------\nconst tasks = [];\nconst calendar = [];\n\nfor (const item of items) {\n  const j = item.json;\n\n  // Task rows\n  if (j.Page && j[\"HTML Estimation\"] !== undefined) {\n    const hrs = Number(j[\"HTML Estimation\"]);\n    if (hrs > 0) {\n      tasks.push({\n        task: j.Page,\n        totalHours: hrs\n      });\n    }\n  }\n\n  // Calendar rows (dd-mm-yy / dd-mm-yyyy)\n  if (j.Date && j.Capacity !== undefined) {\n    const parsedDate = parseAnyDate(j.Date);\n    calendar.push({\n      date: parsedDate,\n      capacity: Number(j.Capacity)\n    });\n  }\n}\n\nif (!tasks.length) throw new Error(\"No task rows found\");\nif (!calendar.length) throw new Error(\"No calendar rows found\");\n\n// ---------- Prepare calendar ----------\nconst usableDates = calendar\n  .filter(d => d.capacity > 0 && d.date >= startDate)\n  .map(d => d.date)\n  .sort((a, b) => a - b);\n\nif (!usableDates.length) {\n  throw new Error(\"No usable dates after applying capacity and start date\");\n}\n\n// ---------- Scheduling engine ----------\nconst DAILY_CAPACITY = 8;\nlet dayIndex = 0;\nlet dayNumber = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\nconst timeline = [];\n\nfor (const t of tasks) {\n  let remainingTaskHours = t.totalHours;\n\n  while (remainingTaskHours > 0) {\n    if (dayIndex >= usableDates.length) {\n      throw new Error(\"Not enough calendar dates to schedule all work\");\n    }\n\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n    \n    timeline.push({\n      Day: `Day ${dayNumber}`,\n      Date: formatYYYYMMDD(usableDates[dayIndex]),\n      Task: t.task,\n      \"Task Total Hours\": `${t.totalHours} hours`,\n      \"Worked Hours\": `${worked} hours`,\n      \"Task Remaining After\": `${remainingTaskHours - worked} hours`,\n      \"Day Remaining After\": `${remainingDayHours - worked} hours`\n    });\n\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      dayIndex++;\n      dayNumber++;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// ---------- Output ----------\nreturn timeline.map(row => ({ json: row }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        688
+      ],
+      "id": "ad6a158a-7a7b-412b-ad7f-8f12e39d7f86",
+      "name": "Code in JavaScript8"
+    }
+  ],
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URLHERE": {
+      "main": [
+        [
+          {
+            "node": "Calendar sheet1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar sheet1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "URLHERE",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript8": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Code in JavaScript": [
+      {
+        "json": {
+          "Day": "Day 1",
+          "Task": "Project Setup / Global Style",
+          "Task Total Hours": 3,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 1",
+          "Task": "Header/Footer\n- Pagetitle V1\n- Pagetitle V2",
+          "Task Total Hours": 6,
+          "Worked Hours": 5,
+          "Task Remaining After": 1,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 2",
+          "Task": "Header/Footer\n- Pagetitle V1\n- Pagetitle V2",
+          "Task Total Hours": 6,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 7
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 2",
+          "Task": "Homepage",
+          "Task Total Hours": 20,
+          "Worked Hours": 7,
+          "Task Remaining After": 13,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 3",
+          "Task": "Homepage",
+          "Task Total Hours": 20,
+          "Worked Hours": 8,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 4",
+          "Task": "Homepage",
+          "Task Total Hours": 20,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 4",
+          "Task": "The Music",
+          "Task Total Hours": 12,
+          "Worked Hours": 3,
+          "Task Remaining After": 9,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 5",
+          "Task": "The Music",
+          "Task Total Hours": 12,
+          "Worked Hours": 8,
+          "Task Remaining After": 1,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 6",
+          "Task": "The Music",
+          "Task Total Hours": 12,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 7
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 6",
+          "Task": "Blog Listing",
+          "Task Total Hours": 10,
+          "Worked Hours": 7,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 7",
+          "Task": "Blog Listing",
+          "Task Total Hours": 10,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 7",
+          "Task": "Blog Detail",
+          "Task Total Hours": 8,
+          "Worked Hours": 5,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 8",
+          "Task": "Blog Detail",
+          "Task Total Hours": 8,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 8",
+          "Task": "Contact Us",
+          "Task Total Hours": 8,
+          "Worked Hours": 5,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 9",
+          "Task": "Contact Us",
+          "Task Total Hours": 8,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 9",
+          "Task": "The Podcast",
+          "Task Total Hours": 14,
+          "Worked Hours": 5,
+          "Task Remaining After": 9,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 10",
+          "Task": "The Podcast",
+          "Task Total Hours": 14,
+          "Worked Hours": 8,
+          "Task Remaining After": 1,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 11",
+          "Task": "The Podcast",
+          "Task Total Hours": 14,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 7
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 11",
+          "Task": "About US",
+          "Task Total Hours": 10,
+          "Worked Hours": 7,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 12",
+          "Task": "About US",
+          "Task Total Hours": 10,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 12",
+          "Task": "Resource Room List",
+          "Task Total Hours": 8,
+          "Worked Hours": 5,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 13",
+          "Task": "Resource Room List",
+          "Task Total Hours": 8,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 13",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 20,
+          "Worked Hours": 5,
+          "Task Remaining After": 15,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 14",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 20,
+          "Worked Hours": 8,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 15",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 20,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 15",
+          "Task": "The Swag Shop",
+          "Task Total Hours": 8,
+          "Worked Hours": 1,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 16",
+          "Task": "The Swag Shop",
+          "Task Total Hours": 8,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 16",
+          "Task": "Partner With Us",
+          "Task Total Hours": 6,
+          "Worked Hours": 1,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 17",
+          "Task": "Partner With Us",
+          "Task Total Hours": 6,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 17",
+          "Task": "Press Coverage",
+          "Task Total Hours": 6,
+          "Worked Hours": 3,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "Press Coverage",
+          "Task Total Hours": 6,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "The Jury's Out Podcast",
+          "Task Total Hours": 3,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 2
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "Disclaimer",
+          "Task Total Hours": 1,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "Return & Shipping Policy",
+          "Task Total Hours": 3,
+          "Worked Hours": 1,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 19",
+          "Task": "Return & Shipping Policy",
+          "Task Total Hours": 3,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 19",
+          "Task": 404,
+          "Task Total Hours": 1,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      }
+    ],
+    "Code in JavaScript1": [
+      {
+        "json": {
+          "Day": "Day 1",
+          "Task": "Project Setup / Global Style",
+          "Task Total Hours": 10,
+          "Worked Hours": 8,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 2",
+          "Task": "Project Setup / Global Style",
+          "Task Total Hours": 10,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 2",
+          "Task": "Theme Setup",
+          "Task Total Hours": 8,
+          "Worked Hours": 6,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 3",
+          "Task": "Theme Setup",
+          "Task Total Hours": 8,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 3",
+          "Task": "Site Settings",
+          "Task Total Hours": 8,
+          "Worked Hours": 6,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 4",
+          "Task": "Site Settings",
+          "Task Total Hours": 8,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 4",
+          "Task": "Woo-Commerce Setup",
+          "Task Total Hours": 4,
+          "Worked Hours": 4,
+          "Task Remaining After": 0,
+          "Day Remaining After": 2
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 4",
+          "Task": "Header/Footer\n- Pagetitle V1\n- Pagetitle V2",
+          "Task Total Hours": 9,
+          "Worked Hours": 2,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 5",
+          "Task": "Header/Footer\n- Pagetitle V1\n- Pagetitle V2",
+          "Task Total Hours": 9,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 5",
+          "Task": "The Events Calender  \nDonation Plugin \nResource CPT\nPodcast CPT\nMusic CPT\nPress CPT",
+          "Task Total Hours": 10,
+          "Worked Hours": 1,
+          "Task Remaining After": 9,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 6",
+          "Task": "The Events Calender  \nDonation Plugin \nResource CPT\nPodcast CPT\nMusic CPT\nPress CPT",
+          "Task Total Hours": 10,
+          "Worked Hours": 8,
+          "Task Remaining After": 1,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 7",
+          "Task": "The Events Calender  \nDonation Plugin \nResource CPT\nPodcast CPT\nMusic CPT\nPress CPT",
+          "Task Total Hours": 10,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 7
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 7",
+          "Task": "Homepage",
+          "Task Total Hours": 14,
+          "Worked Hours": 7,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 8",
+          "Task": "Homepage",
+          "Task Total Hours": 14,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 8",
+          "Task": "The Music",
+          "Task Total Hours": 6,
+          "Worked Hours": 1,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 9",
+          "Task": "The Music",
+          "Task Total Hours": 6,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 9",
+          "Task": "Blog Listing",
+          "Task Total Hours": 8,
+          "Worked Hours": 3,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 10",
+          "Task": "Blog Listing",
+          "Task Total Hours": 8,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 10",
+          "Task": "Blog Detail",
+          "Task Total Hours": 8,
+          "Worked Hours": 3,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 11",
+          "Task": "Blog Detail",
+          "Task Total Hours": 8,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 11",
+          "Task": "Contact Us",
+          "Task Total Hours": 6,
+          "Worked Hours": 3,
+          "Task Remaining After": 3,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 12",
+          "Task": "Contact Us",
+          "Task Total Hours": 6,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 5
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 12",
+          "Task": "The Podcast",
+          "Task Total Hours": 7,
+          "Worked Hours": 5,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 13",
+          "Task": "The Podcast",
+          "Task Total Hours": 7,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 13",
+          "Task": "About US",
+          "Task Total Hours": 5,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 13",
+          "Task": "Resource Room List",
+          "Task Total Hours": 8,
+          "Worked Hours": 1,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 14",
+          "Task": "Resource Room List",
+          "Task Total Hours": 8,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 14",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 14,
+          "Worked Hours": 1,
+          "Task Remaining After": 13,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 15",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 14,
+          "Worked Hours": 8,
+          "Task Remaining After": 5,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 16",
+          "Task": "Resource Room Detail Page",
+          "Task Total Hours": 14,
+          "Worked Hours": 5,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 16",
+          "Task": "The Swag Shop",
+          "Task Total Hours": 10,
+          "Worked Hours": 3,
+          "Task Remaining After": 7,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 17",
+          "Task": "The Swag Shop",
+          "Task Total Hours": 10,
+          "Worked Hours": 7,
+          "Task Remaining After": 0,
+          "Day Remaining After": 1
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 17",
+          "Task": "Partner With Us",
+          "Task Total Hours": 7,
+          "Worked Hours": 1,
+          "Task Remaining After": 6,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "Partner With Us",
+          "Task Total Hours": 7,
+          "Worked Hours": 6,
+          "Task Remaining After": 0,
+          "Day Remaining After": 2
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 18",
+          "Task": "Press Coverage",
+          "Task Total Hours": 4,
+          "Worked Hours": 2,
+          "Task Remaining After": 2,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 19",
+          "Task": "Press Coverage",
+          "Task Total Hours": 4,
+          "Worked Hours": 2,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 19",
+          "Task": "The Jury's Out Podcast",
+          "Task Total Hours": 7,
+          "Worked Hours": 6,
+          "Task Remaining After": 1,
+          "Day Remaining After": 0
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 20",
+          "Task": "The Jury's Out Podcast",
+          "Task Total Hours": 7,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 7
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 20",
+          "Task": "Disclaimer",
+          "Task Total Hours": 1,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 6
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 20",
+          "Task": "Return & Shipping Policy",
+          "Task Total Hours": 3,
+          "Worked Hours": 3,
+          "Task Remaining After": 0,
+          "Day Remaining After": 3
+        }
+      },
+      {
+        "json": {
+          "Day": "Day 20",
+          "Task": 404,
+          "Task Total Hours": 1,
+          "Worked Hours": 1,
+          "Task Remaining After": 0,
+          "Day Remaining After": 2
+        }
+      }
+    ]
+  },
+  "versionId": "ac38b370-a2a8-4caa-8194-4ef6c72234b8",
+  "activeVersionId": "f6d24310-270b-4642-929f-3aff9ffdd860",
+  "versionCounter": 33,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-01-12T12:58:56.585Z",
+      "createdAt": "2026-01-12T12:58:56.585Z",
+      "role": "workflow:owner",
+      "workflowId": "iRGT9Oc6gUnKyubocqc3N",
+      "projectId": "CFdHyYwi8HDKofY6",
+      "project": {
+        "updatedAt": "2026-01-12T12:21:32.805Z",
+        "createdAt": "2026-01-12T12:20:00.564Z",
+        "id": "CFdHyYwi8HDKofY6",
+        "name": "Shyam Patel <shyam@ninegravity.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T12:20:00.571Z",
+            "createdAt": "2026-01-12T12:20:00.571Z",
+            "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+            "projectId": "CFdHyYwi8HDKofY6",
+            "user": {
+              "updatedAt": "2026-01-20T04:52:51.000Z",
+              "createdAt": "2026-01-12T12:20:00.540Z",
+              "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+              "email": "shyam@ninegravity.com",
+              "firstName": "Shyam",
+              "lastName": "Patel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T12:21:48.104Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "companyType": "personal",
+                "reportedSource": "friend"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "iRGT9Oc6gUnKyubocqc3N",
+                "userActivated": true,
+                "userActivatedAt": 1768222886305,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1768719088345
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-19",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-01-12T13:02:09.000Z",
+    "createdAt": "2026-01-12T13:01:41.247Z",
+    "versionId": "f6d24310-270b-4642-929f-3aff9ffdd860",
+    "workflowId": "iRGT9Oc6gUnKyubocqc3N",
+    "nodes": [
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "={{ $('URLHERE').item.json.URL }}",
+            "mode": "url",
+            "__regex": "https:\\/\\/(?:drive|docs)\\.google\\.com(?:\\/.*|)\\/d\\/([0-9a-zA-Z\\-_]+)(?:\\/.*|)"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "Planning",
+            "mode": "name"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          448,
+          880
+        ],
+        "id": "84c809fb-8328-41f7-b55b-1e18789c183f",
+        "name": "Get row(s) in sheet",
+        "executeOnce": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// HTML TASK SCHEDULING ENGINE (n8n)\n// with Task Total Hours column\n// ======================================\n\n// Config\nconst DAILY_CAPACITY = 8;\n\n// State\nlet day = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\n// Output\nconst timeline = [];\n\n// Loop through tasks (input items)\nfor (const item of items) {\n  const task = item.json.Page;\n  const taskTotalHours = Number(item.json[\"HTML Estimation\"]);\n  let remainingTaskHours = taskTotalHours;\n\n  if (!taskTotalHours || taskTotalHours <= 0) continue;\n\n  while (remainingTaskHours > 0) {\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${day}`,\n      Task: task,\n      \"Task Total Hours\": taskTotalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      day += 1;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// Return as n8n items\nreturn timeline.map(row => ({ json: row }));\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -224,
+          1104
+        ],
+        "id": "57eb9ec8-e286-4157-8395-2945c1e3f5cb",
+        "name": "Code in JavaScript",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// HTML TASK SCHEDULING ENGINE (n8n)\n// with Task Total Hours column\n// ======================================\n\n// Config\nconst DAILY_CAPACITY = 8;\n\n// State\nlet day = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\n// Output\nconst timeline = [];\n\n// Loop through tasks (input items)\nfor (const item of items) {\n  const task = item.json.Page;\n  const taskTotalHours = Number(item.json[\"Dev Estimation\"]);\n  let remainingTaskHours = taskTotalHours;\n\n  if (!taskTotalHours || taskTotalHours <= 0) continue;\n\n  while (remainingTaskHours > 0) {\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${day}`,\n      Task: task,\n      \"Task Total Hours\": taskTotalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      day += 1;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// Return as n8n items\nreturn timeline.map(row => ({ json: row }));\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -224,
+          1552
+        ],
+        "id": "41f0043a-a992-4f0f-bd28-461debc2b7ad",
+        "name": "Code in JavaScript1",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "documentId": {
+            "__rl": true,
+            "value": "={{ $('URLHERE').item.json.URL }}",
+            "mode": "url"
+          },
+          "title": "Dev Estimations",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          448,
+          496
+        ],
+        "id": "0a2f891a-7846-4a4e-bed6-d25cb32b83ec",
+        "name": "Create sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "documentId": {
+            "__rl": true,
+            "value": "={{ $('URLHERE').item.json.URL }}",
+            "mode": "url"
+          },
+          "title": "HTML Estimations",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          448,
+          304
+        ],
+        "id": "f10c5c40-f72d-4186-b105-cf9e8885e913",
+        "name": "Create sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "7e32054f-a80a-4cc5-b01a-b56c635d382c",
+                "name": "URL",
+                "value": "={{ $('On form submission').item.json.URL }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          80,
+          592
+        ],
+        "id": "48c468de-51a2-4609-b741-39da4c8180ea",
+        "name": "URLHERE"
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// MASTER MAPPING CODE NODE\n// - No Set node\n// - Normalizes fields\n// - Computes Date from startDate + Day\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Transform ALL items ----------\nreturn items\n  // ignore rows where no real work happened\n  .filter(item => Number(item.json[\"workedHours   \"]) > 0)\n  .map(item => {\n    const j = item.json;\n\n    // ---- Required fields ----\n    const startDateStr = j.startDate;\n    const dayLabel = j[\"day \"];\n\n    if (!startDateStr || !dayLabel) {\n      throw new Error(\"Missing startDate or day field\");\n    }\n\n    // Extract day number from \"Day X\"\n    const dayNumber = Number(dayLabel.replace(\"Day\", \"\").trim());\n    if (isNaN(dayNumber)) {\n      throw new Error(`Invalid Day value: ${dayLabel}`);\n    }\n\n    // ---- Date calculation ----\n    const startDate = parseDDMMYY(startDateStr);\n    const resultDate = new Date(startDate);\n    resultDate.setDate(startDate.getDate() + (dayNumber - 1));\n\n    // ---- Final normalized output ----\n    return {\n      json: {\n        Day: dayLabel.trim(),\n        Date: formatDDMMYY(resultDate),\n\n        Task: j[\"task          \"]?.trim() ?? null,\n        \"Task Total Hours\": j[\"taskTotal     \"] ?? null,\n        \"Worked Hours\": j[\"workedHours   \"] ?? null,\n\n        \"Task Remaining After\": j[\"Task Remaining After\"] ?? null,\n        \"Day Remaining After\": j[\"Day Remaining After\"] ?? null\n      }\n    };\n  });\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -224,
+          1328
+        ],
+        "id": "89a191cc-cb89-4c4b-85b4-674e5558193f",
+        "name": "Code in JavaScript2",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU",
+            "mode": "list",
+            "cachedResultName": "Calendar Sheet",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yvU0swt1QLOFQoyAljP-cla8qEgbYYdUS9l1CGJejZU/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          448,
+          688
+        ],
+        "id": "1404c122-377b-4e26-b6ed-4e1792514ab2",
+        "name": "Calendar sheet1",
+        "executeOnce": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a60cdaea-1112-4abc-be98-fb062a058cbd",
+                "name": "startDate",
+                "value": "={{ $('Code in JavaScript4').first().json.ProjectStartDate }}",
+                "type": "string"
+              },
+              {
+                "id": "d3e59f96-6393-4df2-a80f-d5ca46144397",
+                "name": "day ",
+                "value": "={{ $('Code in JavaScript1').item.json.Day }}",
+                "type": "string"
+              },
+              {
+                "id": "a223faf6-8cd1-4edf-baf5-6ed56b5d3156",
+                "name": "task          ",
+                "value": "={{ $('Code in JavaScript1').item.json.Task }}",
+                "type": "string"
+              },
+              {
+                "id": "05e5853d-b10f-43c2-85f3-957fb36eea41",
+                "name": "taskTotal     ",
+                "value": "={{ $('Code in JavaScript1').item.json[\"Task Total Hours\"] }}",
+                "type": "number"
+              },
+              {
+                "id": "6353aade-1738-4155-a9d8-0810c82cd34f",
+                "name": "workedHours   ",
+                "value": "={{ $('Code in JavaScript1').item.json[\"Worked Hours\"] }}",
+                "type": "number"
+              },
+              {
+                "id": "2d26f236-553f-496d-91a8-ae97eaa04f94",
+                "name": "calendarDate  ",
+                "value": "={{ $('Calendar sheet1').first().json.Date }}\n",
+                "type": "string"
+              },
+              {
+                "id": "46f65dea-36bc-47bf-91a0-c858f75a9500",
+                "name": "capacity      ",
+                "value": "={{ $('Calendar sheet1').first().json.Capacity }}\n",
+                "type": "number"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -224,
+          1776
+        ],
+        "id": "e6a3947e-b892-49ee-aaae-10beb60d2998",
+        "name": "Edit Fields2",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// DATE MAPPING FROM startDate + Day N\n// Compatible with n8n Code node\n// ======================================\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Process ALL items ----------\nreturn items.map((item) => {\n  const json = item.json;\n\n  const startDateStr = json.startDate;\n  const dayLabel = json[\"day \"]; // ⚠️ trailing space keys\n\n  if (!startDateStr || !dayLabel) {\n    throw new Error(\"Missing startDate or day\");\n  }\n\n  // Extract number from \"Day 12\"\n  const dayNumber = Number(dayLabel.replace(\"Day\", \"\").trim());\n\n  if (isNaN(dayNumber)) {\n    throw new Error(`Invalid day format: ${dayLabel}`);\n  }\n\n  // Calculate date\n  const startDate = parseDDMMYY(startDateStr);\n  const resultDate = new Date(startDate);\n  resultDate.setDate(startDate.getDate() + (dayNumber - 1));\n\n  return {\n    json: {\n      Day: dayLabel.trim(),\n      Date: formatDDMMYY(resultDate),\n      Task: json[\"task          \"].trim(),\n      \"Task Total Hours\": json[\"taskTotal     \"],\n      \"Worked Hours\": json[\"workedHours   \"]\n      \n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          0,
+          1776
+        ],
+        "id": "cbdd65b0-fc8d-459d-bf84-26280d070101",
+        "name": "Code in JavaScript3",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "={{ $('URLHERE').first().json.URL }}",
+            "mode": "url"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "HTML Estimations",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1120,
+          688
+        ],
+        "id": "31508bff-f0d6-491f-806d-691fee91b77f",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "formTitle": "Form",
+          "formDescription": "We'll get back to you soon",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "URL",
+                "fieldType": "textarea",
+                "placeholder": "sheet url here",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Project start Date",
+                "fieldType": "date",
+                "requiredField": true
+              }
+            ]
+          },
+          "responseMode": "lastNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.3,
+        "position": [
+          -224,
+          592
+        ],
+        "id": "814f2b3d-3acd-4ace-bdbb-0d51d075e271",
+        "name": "On form submission",
+        "webhookId": "c1e38919-3d2d-4e0e-af7b-ad8dba34ce54"
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// Parse Project Start Date from Form\n// Input: \"Project start Date\" (yyyy-mm-dd)\n// Output: ProjectStartDate (dd-mm-yy)\n// ======================================\n\n// Read exact field name (with spaces)\nconst inputDate = $json[\"Project start Date\"];\n\nif (!inputDate) {\n  throw new Error(\"Project start Date not found in form submission\");\n}\n\n// Expecting yyyy-mm-dd\nconst [year, month, day] = inputDate.split(\"-\");\n\nif (!year || !month || !day) {\n  throw new Error(`Invalid date format: ${inputDate}`);\n}\n\n// Convert to dd-mm-yy\nconst formattedDate = `${day}-${month}-${year.slice(-2)}`;\n\nreturn [\n  {\n    json: {\n      original: inputDate,\n      ProjectStartDate: formattedDate\n    }\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          464,
+          1056
+        ],
+        "id": "f1e10bef-87c9-4428-83db-aff24ca5a52b",
+        "name": "Code in JavaScript4"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "={{ $('URLHERE').first().json.URL }}",
+            "mode": "url"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "Dev Estimations",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1120,
+          880
+        ],
+        "id": "86f52974-6a20-45d8-a9b0-4f9604ab6923",
+        "name": "Append row in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "zr0r2q1g70G70jjo",
+            "name": "Google Sheets account Shyam"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// FINAL TIMELINE MAPPER\n// - Merges HTML + DEV timelines\n// - Maps Day -> Date using startDate\n// ======================================\n\n// ---------- CONFIG ----------\nconst START_DATE = \"07-01-26\"; // change later or make dynamic\n\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Logic ----------\nconst startDate = parseDDMMYY(START_DATE);\n\nreturn items.map(item => {\n  const row = item.json;\n\n  // Extract Day number\n  const dayNumber = Number(\n    String(row.Day).replace(\"Day\", \"\").trim()\n  );\n\n  if (isNaN(dayNumber)) {\n    throw new Error(`Invalid Day value: ${row.Day}`);\n  }\n\n  // Calculate date\n  const date = new Date(startDate);\n  date.setDate(startDate.getDate() + (dayNumber - 1));\n\n  return {\n    json: {\n      ...row,\n      Date: formatDDMMYY(date)\n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          0,
+          1104
+        ],
+        "id": "b5783557-7965-44d0-a1fc-72eb6bd90bba",
+        "name": "Code in JavaScript5",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// SINGLE NODE: SCHEDULING + DATE MAPPING\n// Uses merged Tasks + Calendar\n// Skips Capacity = 0 dates\n// ======================================\n\n// ---------- Helpers ----------\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Extract startDate from merged input ----------\nconst startDateItem = items.find(i => i.json.ProjectStartDate);\n\nif (!startDateItem) {\n  throw new Error(\"ProjectStartDate not found in merged input\");\n}\n\nconst startDate = parseDDMMYY(startDateItem.json.ProjectStartDate);\n\n\n\n// ---------- Separate merged data ----------\nconst tasks = [];\nconst calendar = [];\n\nfor (const item of items) {\n  const j = item.json;\n\n  // Task rows\n  if (j.Page && j[\"HTML Estimation\"] !== undefined) {\n    const hrs = Number(j[\"HTML Estimation\"]);\n    if (hrs > 0) {\n      tasks.push({\n        task: j.Page,\n        totalHours: hrs\n      });\n    }\n  }\n\n  // Calendar rows\n  if (j.Date && j.Capacity !== undefined) {\n    calendar.push({\n      date: parseDDMMYY(j.Date),\n      capacity: Number(j.Capacity)\n    });\n  }\n}\n\nif (!tasks.length) throw new Error(\"No task rows found\");\nif (!calendar.length) throw new Error(\"No calendar rows found\");\n\n// ---------- Prepare calendar (Capacity > 0 only) ----------\nconst usableDates = calendar\n  .filter(d => d.capacity > 0 && d.date >= startDate)\n  .map(d => d.date)\n  .sort((a, b) => a - b);\n\n\nif (!usableDates.length) {\n  throw new Error(\"No usable dates (all capacity = 0)\");\n}\n\n// ---------- Scheduling engine ----------\nconst DAILY_CAPACITY = 8;\nlet dayIndex = 0;\nlet dayNumber = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\nconst timeline = [];\n\nfor (const t of tasks) {\n  let remainingTaskHours = t.totalHours;\n\n  while (remainingTaskHours > 0) {\n    if (dayIndex >= usableDates.length) {\n      throw new Error(\"Not enough calendar dates to schedule all work\");\n    }\n\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${dayNumber}`,\n      Date: formatDDMMYY(usableDates[dayIndex]),\n      Task: t.task,\n      \"Task Total Hours\": t.totalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      dayIndex++;\n      dayNumber++;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// ---------- Output ----------\nreturn timeline.map(row => ({ json: row }));\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          896,
+          688
+        ],
+        "id": "5c7f2fa7-0bbe-49a6-b37f-8b4dae4363fb",
+        "name": "Code in JavaScript6"
+      },
+      {
+        "parameters": {
+          "numberInputs": 3
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          672,
+          784
+        ],
+        "id": "b13bac80-08c7-46f3-801b-fd0a75a32f19",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "jsCode": "// ======================================\n// SINGLE NODE: SCHEDULING + DATE MAPPING\n// Uses merged Tasks + Calendar\n// Skips Capacity = 0 dates\n// ======================================\n\n// ---------- Helpers ----------\n// ---------- Helpers ----------\nfunction parseDDMMYY(str) {\n  const [dd, mm, yy] = str.trim().split(\"-\").map(Number);\n  const fullYear = yy < 70 ? 2000 + yy : 1900 + yy;\n  return new Date(fullYear, mm - 1, dd);\n}\n\nfunction formatDDMMYY(date) {\n  const dd = String(date.getDate()).padStart(2, \"0\");\n  const mm = String(date.getMonth() + 1).padStart(2, \"0\");\n  const yy = String(date.getFullYear()).slice(-2);\n  return `${dd}-${mm}-${yy}`;\n}\n\n// ---------- Extract startDate from merged input ----------\nconst startDateItem = items.find(i => i.json.ProjectStartDate);\n\nif (!startDateItem) {\n  throw new Error(\"ProjectStartDate not found in merged input\");\n}\n\nconst startDate = parseDDMMYY(startDateItem.json.ProjectStartDate);\n\n\n\n// ---------- Separate merged data ----------\nconst tasks = [];\nconst calendar = [];\n\nfor (const item of items) {\n  const j = item.json;\n\n  // Task rows\n  if (j.Page && j[\"Dev Estimation\"] !== undefined) {\n    const hrs = Number(j[\"HTML Estimation\"]);\n    if (hrs > 0) {\n      tasks.push({\n        task: j.Page,\n        totalHours: hrs\n      });\n    }\n  }\n\n  // Calendar rows\n  if (j.Date && j.Capacity !== undefined) {\n    calendar.push({\n      date: parseDDMMYY(j.Date),\n      capacity: Number(j.Capacity)\n    });\n  }\n}\n\nif (!tasks.length) throw new Error(\"No task rows found\");\nif (!calendar.length) throw new Error(\"No calendar rows found\");\n\n// ---------- Prepare calendar (Capacity > 0 only) ----------\nconst usableDates = calendar\n  .filter(d => d.capacity > 0 && d.date >= startDate)\n  .map(d => d.date)\n  .sort((a, b) => a - b);\n\n\nif (!usableDates.length) {\n  throw new Error(\"No usable dates (all capacity = 0)\");\n}\n\n// ---------- Scheduling engine ----------\nconst DAILY_CAPACITY = 8;\nlet dayIndex = 0;\nlet dayNumber = 1;\nlet remainingDayHours = DAILY_CAPACITY;\n\nconst timeline = [];\n\nfor (const t of tasks) {\n  let remainingTaskHours = t.totalHours;\n\n  while (remainingTaskHours > 0) {\n    if (dayIndex >= usableDates.length) {\n      throw new Error(\"Not enough calendar dates to schedule all work\");\n    }\n\n    const worked = Math.min(remainingTaskHours, remainingDayHours);\n\n    timeline.push({\n      Day: `Day ${dayNumber}`,\n      Date: formatDDMMYY(usableDates[dayIndex]),\n      Task: t.task,\n      \"Task Total Hours\": t.totalHours,\n      \"Worked Hours\": worked,\n      \"Task Remaining After\": remainingTaskHours - worked,\n      \"Day Remaining After\": remainingDayHours - worked\n    });\n\n    remainingTaskHours -= worked;\n    remainingDayHours -= worked;\n\n    if (remainingDayHours === 0) {\n      dayIndex++;\n      dayNumber++;\n      remainingDayHours = DAILY_CAPACITY;\n    }\n  }\n}\n\n// ---------- Output ----------\nreturn timeline.map(row => ({ json: row }));\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          896,
+          880
+        ],
+        "id": "decd9c06-e6e6-4493-8744-34902645cf1f",
+        "name": "Code in JavaScript7"
+      }
+    ],
+    "connections": {
+      "Get row(s) in sheet": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "URLHERE": {
+        "main": [
+          [
+            {
+              "node": "Calendar sheet1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Create sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Create sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Calendar sheet1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields2": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "URLHERE",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript4": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 2
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript6",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript7",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript6": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript7": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Shyam Patel",
+    "name": "v1",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-01-12T13:02:09.685Z",
+        "id": 6,
+        "workflowId": "iRGT9Oc6gUnKyubocqc3N",
+        "versionId": "f6d24310-270b-4642-929f-3aff9ffdd860",
+        "event": "activated",
+        "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5"
+      }
+    ]
+  }
+}
