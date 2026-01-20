@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-01-20T13:47:14.862Z",
+  "updatedAt": "2026-01-20T13:51:08.014Z",
   "createdAt": "2026-01-20T12:52:10.327Z",
   "id": "ROBIpiepkriYfaghRYEeA",
   "name": "Backup & Restore N8N workflows (Github and Google Drive)",
@@ -914,11 +914,7 @@
     },
     {
       "parameters": {
-        "fieldsToAggregate": {
-          "fieldToAggregate": [
-            {}
-          ]
-        },
+        "aggregate": "aggregateAllItemData",
         "options": {}
       },
       "type": "n8n-nodes-base.aggregate",
@@ -1292,9 +1288,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3512031f-5ffd-4913-9b80-7bf8cfa61dea",
-  "activeVersionId": "2808f486-4fee-49cb-be4b-4a8fc87676dd",
-  "versionCounter": 16,
+  "versionId": "e50955d7-8a95-492c-beea-f9569d6ac025",
+  "activeVersionId": "e50955d7-8a95-492c-beea-f9569d6ac025",
+  "versionCounter": 19,
   "triggerCount": 1,
   "shared": [
     {
@@ -1371,9 +1367,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2026-01-20T13:45:07.000Z",
-    "createdAt": "2026-01-20T13:45:04.185Z",
-    "versionId": "2808f486-4fee-49cb-be4b-4a8fc87676dd",
+    "updatedAt": "2026-01-20T13:51:13.000Z",
+    "createdAt": "2026-01-20T13:51:08.020Z",
+    "versionId": "e50955d7-8a95-492c-beea-f9569d6ac025",
     "workflowId": "ROBIpiepkriYfaghRYEeA",
     "nodes": [
       {
@@ -1435,7 +1431,7 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.2,
         "position": [
-          -1856,
+          -1648,
           752
         ],
         "id": "b303c78b-2f36-436c-b26d-2e1fbb027efb",
@@ -1468,7 +1464,7 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.2,
         "position": [
-          -1664,
+          -1456,
           512
         ],
         "id": "98e46c21-95a4-4a01-906d-f4b4b8d3be14",
@@ -1487,7 +1483,7 @@
         "type": "n8n-nodes-base.n8n",
         "typeVersion": 1,
         "position": [
-          -1664,
+          -1456,
           976
         ],
         "id": "520cd2c6-bb46-4745-9ac2-12aa26933acc",
@@ -1512,7 +1508,7 @@
         "type": "n8n-nodes-base.n8n",
         "typeVersion": 1,
         "position": [
-          -1248,
+          -1040,
           608
         ],
         "id": "2911e7c4-4588-4f3c-9c7f-c7c31700f143",
@@ -1531,7 +1527,7 @@
         "type": "n8n-nodes-base.wait",
         "typeVersion": 1.1,
         "position": [
-          -2224,
+          -2112,
           752
         ],
         "id": "f0ba2e84-86c5-4ea5-88f0-7430b787b0f0",
@@ -1574,7 +1570,7 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          -1040,
+          -832,
           848
         ],
         "id": "0e1ed3ac-c5fa-47ee-b17b-96c3b3c2757b",
@@ -1627,7 +1623,7 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          -1040,
+          -832,
           1104
         ],
         "id": "b5ce141b-47ab-4f0e-8366-c690f53c9883",
@@ -1638,7 +1634,7 @@
         "type": "n8n-nodes-base.merge",
         "typeVersion": 3.2,
         "position": [
-          -800,
+          -592,
           960
         ],
         "id": "1dd72a4c-65d6-4a7b-b7d9-85728dc9c283",
@@ -1697,7 +1693,7 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          -416,
+          -208,
           960
         ],
         "id": "f3ab1578-a103-4609-91e4-54400c2c2e68",
@@ -1711,7 +1707,7 @@
         "type": "n8n-nodes-base.aggregate",
         "typeVersion": 1,
         "position": [
-          -608,
+          -400,
           960
         ],
         "id": "6a2e539a-9114-4fe3-a75c-1bea072b9ff9",
@@ -1746,7 +1742,7 @@
         "type": "n8n-nodes-base.googleSheets",
         "typeVersion": 4.5,
         "position": [
-          -2032,
+          -1888,
           752
         ],
         "id": "458d1dbd-f0a4-4f30-8e1e-7e567f4fa77b",
@@ -1782,7 +1778,7 @@
         "type": "n8n-nodes-base.github",
         "typeVersion": 1.1,
         "position": [
-          -1248,
+          -1040,
           848
         ],
         "id": "a3febca6-6a94-4031-9f4e-5e135201a87e",
@@ -1817,7 +1813,7 @@
         "type": "n8n-nodes-base.googleDrive",
         "typeVersion": 3,
         "position": [
-          -1248,
+          -1040,
           1104
         ],
         "id": "0ff1c414-342d-4a62-9419-73a403b89456",
@@ -1851,7 +1847,7 @@
         "type": "n8n-nodes-base.googleDrive",
         "typeVersion": 3,
         "position": [
-          -800,
+          -592,
           704
         ],
         "id": "603bb207-3d49-4c38-891c-5f1cb5b4a942",
@@ -1887,7 +1883,7 @@
         "type": "n8n-nodes-base.github",
         "typeVersion": 1.1,
         "position": [
-          -800,
+          -592,
           528
         ],
         "id": "fe67decc-9bf3-4c17-b57a-958398f0bc93",
@@ -2001,7 +1997,7 @@
         "type": "n8n-nodes-base.googleSheets",
         "typeVersion": 4.5,
         "position": [
-          -416,
+          -208,
           704
         ],
         "id": "1178ee12-fac1-499f-ad65-1d09dec1f499",
@@ -2116,7 +2112,7 @@
         "type": "n8n-nodes-base.googleSheets",
         "typeVersion": 4.5,
         "position": [
-          -224,
+          -16,
           960
         ],
         "id": "0368bc21-d49d-4ac1-a803-b9453554ed61",
@@ -2135,7 +2131,7 @@
         "type": "n8n-nodes-base.splitInBatches",
         "typeVersion": 3,
         "position": [
-          -2448,
+          -2384,
           736
         ],
         "id": "f04d7d24-4cf6-495a-b1cc-e7894206f2a8",
@@ -2148,7 +2144,7 @@
         "type": "n8n-nodes-base.wait",
         "typeVersion": 1.1,
         "position": [
-          -608,
+          -400,
           704
         ],
         "id": "b95c2cae-9083-4c89-83fe-950d8760209a",
@@ -2168,7 +2164,7 @@
         "type": "n8n-nodes-base.googleDrive",
         "typeVersion": 3,
         "position": [
-          -1456,
+          -1248,
           608
         ],
         "id": "cb1920b4-6f09-45ca-a35f-636a347250dc",
@@ -2188,7 +2184,7 @@
         "name": "Code6",
         "type": "n8n-nodes-base.code",
         "position": [
-          -1040,
+          -832,
           528
         ],
         "typeVersion": 2
@@ -2201,7 +2197,7 @@
         "name": "Code",
         "type": "n8n-nodes-base.code",
         "position": [
-          -1040,
+          -832,
           704
         ],
         "typeVersion": 2
@@ -2214,7 +2210,7 @@
         "name": "Code7",
         "type": "n8n-nodes-base.code",
         "position": [
-          -1456,
+          -1248,
           848
         ],
         "typeVersion": 2
@@ -2227,7 +2223,7 @@
         "name": "Code1",
         "type": "n8n-nodes-base.code",
         "position": [
-          -1456,
+          -1248,
           1104
         ],
         "typeVersion": 2
@@ -2249,7 +2245,7 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          0,
+          208,
           0
         ],
         "id": "dbbe62c7-b6d4-4c6d-9c20-b0754c016ddb",
@@ -2268,7 +2264,7 @@
         "type": "n8n-nodes-base.gmail",
         "typeVersion": 2.2,
         "position": [
-          -2224,
+          -1888,
           544
         ],
         "id": "fdc9a138-2e79-4134-99af-4bb4ed84f4e8",
@@ -2280,6 +2276,20 @@
             "name": "Gmail account Shyam"
           }
         }
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          -2112,
+          544
+        ],
+        "id": "b041d7fd-2044-445b-a173-6fa194c668d5",
+        "name": "Aggregate1"
       }
     ],
     "connections": {
@@ -2531,7 +2541,7 @@
         "main": [
           [
             {
-              "node": "Send a message",
+              "node": "Aggregate1",
               "type": "main",
               "index": 0
             }
@@ -2621,18 +2631,29 @@
             }
           ]
         ]
+      },
+      "Aggregate1": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Owner Owner",
-    "name": "Version 2808f486",
+    "name": "Version e50955d7",
     "description": "",
     "autosaved": false,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-01-20T13:45:07.684Z",
-        "id": 13,
+        "createdAt": "2026-01-20T13:51:13.545Z",
+        "id": 14,
         "workflowId": "ROBIpiepkriYfaghRYEeA",
-        "versionId": "2808f486-4fee-49cb-be4b-4a8fc87676dd",
+        "versionId": "e50955d7-8a95-492c-beea-f9569d6ac025",
         "event": "activated",
         "userId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6"
       }
