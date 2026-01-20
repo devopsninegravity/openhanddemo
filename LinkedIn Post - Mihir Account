@@ -1,0 +1,470 @@
+{
+  "updatedAt": "2026-01-12T13:04:36.391Z",
+  "createdAt": "2026-01-12T12:42:58.860Z",
+  "id": "nYPf4T1dFw_BwSQbc0GME",
+  "name": "LinkedIn Post - Mihir Account",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.message.text }} "
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        272
+      ],
+      "id": "e2e73259-ddd4-4427-84e4-04e7c068babc",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GExCaoi8fH8paDh5",
+          "name": "OpenAi account - DevOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=Create an Image that goes well with the post as follow: {{ $('Message a model').item.json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        272
+      ],
+      "id": "0583e2b7-7310-44b0-827e-5b5317a05110",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "GExCaoi8fH8paDh5",
+          "name": "OpenAi account - DevOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "rZDiBzH-6N",
+        "text": "={{ $('Message a model').item.json.output[0].content[0].text }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        832,
+        272
+      ],
+      "id": "3772abf6-0c69-4f48-8b61-0f17d3568dff",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "TkH3U2cT6RKFCnvL",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        272
+      ],
+      "id": "031bb9c4-6495-4c30-bf90-1e288006d1b9",
+      "name": "Telegram Trigger",
+      "webhookId": "2753c22d-4424-438a-8fa3-05e81c3c828a",
+      "credentials": {
+        "telegramApi": {
+          "id": "9f0TnjQzSoMoTdxD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "=Is this post looks good ??\n\n{{ $json.output[0].content[0].text }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        272
+      ],
+      "id": "896be8d0-fb5b-49be-aae7-0ea2d8f26518",
+      "name": "Content Approval",
+      "webhookId": "WEBHOOK_WILL_BE_GENERATED",
+      "credentials": {
+        "telegramApi": {
+          "id": "9f0TnjQzSoMoTdxD",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Content Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Approval": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d08240c5-5af0-42fc-8cc9-0040f79b8a00",
+  "activeVersionId": "d08240c5-5af0-42fc-8cc9-0040f79b8a00",
+  "versionCounter": 6,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-01-12T12:42:58.869Z",
+      "createdAt": "2026-01-12T12:42:58.869Z",
+      "role": "workflow:owner",
+      "workflowId": "nYPf4T1dFw_BwSQbc0GME",
+      "projectId": "aDl9WwKN0ta9uBVo",
+      "project": {
+        "updatedAt": "2026-01-12T11:51:24.516Z",
+        "createdAt": "2026-01-12T11:51:06.144Z",
+        "id": "aDl9WwKN0ta9uBVo",
+        "name": "Owner Owner <admin@vmi2632825.contaboserver.net>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T11:51:06.144Z",
+            "createdAt": "2026-01-12T11:51:06.144Z",
+            "userId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+            "projectId": "aDl9WwKN0ta9uBVo",
+            "user": {
+              "updatedAt": "2026-01-20T05:00:53.000Z",
+              "createdAt": "2026-01-12T11:51:05.224Z",
+              "id": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+              "email": "admin@vmi2632825.contaboserver.net",
+              "firstName": "Owner",
+              "lastName": "Owner",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T11:59:17.141Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "automationGoalDevops": [
+                  "cloud-infrastructure-orchestration",
+                  "ci-cd",
+                  "data-syncing",
+                  "incident-response",
+                  "monitoring-alerting",
+                  "reporting",
+                  "ticketing-systems-integrations"
+                ],
+                "companyType": "saas",
+                "role": "devops"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nYPf4T1dFw_BwSQbc0GME",
+                "userActivatedAt": 1768222892386,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1768571009887
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-20",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2026-01-12T12:42:56.579Z",
+      "createdAt": "2026-01-12T12:42:56.579Z",
+      "id": "kCtEVGL0Y2rP29Fo",
+      "name": "By: Mihir"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-01-12T13:01:16.000Z",
+    "createdAt": "2026-01-12T13:00:06.472Z",
+    "versionId": "d08240c5-5af0-42fc-8cc9-0040f79b8a00",
+    "workflowId": "nYPf4T1dFw_BwSQbc0GME",
+    "nodes": [
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "chatgpt-4o-latest",
+            "mode": "list",
+            "cachedResultName": "CHATGPT-4O-LATEST"
+          },
+          "responses": {
+            "values": [
+              {
+                "content": "={{ $json.message.text }} "
+              }
+            ]
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 2.1,
+        "position": [
+          16,
+          272
+        ],
+        "id": "e2e73259-ddd4-4427-84e4-04e7c068babc",
+        "name": "Message a model",
+        "credentials": {
+          "openAiApi": {
+            "id": "GExCaoi8fH8paDh5",
+            "name": "OpenAi account - DevOps"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "image",
+          "prompt": "=Create an Image that goes well with the post as follow: {{ $('Message a model').item.json.output[0].content[0].text }}",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 2.1,
+        "position": [
+          608,
+          272
+        ],
+        "id": "0583e2b7-7310-44b0-827e-5b5317a05110",
+        "name": "Generate an image",
+        "credentials": {
+          "openAiApi": {
+            "id": "GExCaoi8fH8paDh5",
+            "name": "OpenAi account - DevOps"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "person": "rZDiBzH-6N",
+          "text": "={{ $('Message a model').item.json.output[0].content[0].text }}",
+          "shareMediaCategory": "IMAGE",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.linkedIn",
+        "typeVersion": 1,
+        "position": [
+          832,
+          272
+        ],
+        "id": "3772abf6-0c69-4f48-8b61-0f17d3568dff",
+        "name": "Create a post",
+        "credentials": {
+          "linkedInOAuth2Api": {
+            "id": "TkH3U2cT6RKFCnvL",
+            "name": "LinkedIn account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -192,
+          272
+        ],
+        "id": "031bb9c4-6495-4c30-bf90-1e288006d1b9",
+        "name": "Telegram Trigger",
+        "webhookId": "2753c22d-4424-438a-8fa3-05e81c3c828a",
+        "credentials": {
+          "telegramApi": {
+            "id": "9f0TnjQzSoMoTdxD",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "sendAndWait",
+          "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "message": "=Is this post looks good ??\n\n{{ $json.output[0].content[0].text }}",
+          "approvalOptions": {
+            "values": {
+              "approvalType": "double"
+            }
+          },
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          368,
+          272
+        ],
+        "id": "896be8d0-fb5b-49be-aae7-0ea2d8f26518",
+        "name": "Content Approval",
+        "webhookId": "WEBHOOK_WILL_BE_GENERATED",
+        "credentials": {
+          "telegramApi": {
+            "id": "9f0TnjQzSoMoTdxD",
+            "name": "Telegram account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Message a model": {
+        "main": [
+          [
+            {
+              "node": "Content Approval",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generate an image": {
+        "main": [
+          [
+            {
+              "node": "Create a post",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "Message a model",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Content Approval": {
+        "main": [
+          [
+            {
+              "node": "Generate an image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Owner Owner",
+    "name": "Version d08240c5",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-01-12T13:01:16.932Z",
+        "id": 5,
+        "workflowId": "nYPf4T1dFw_BwSQbc0GME",
+        "versionId": "d08240c5-5af0-42fc-8cc9-0040f79b8a00",
+        "event": "activated",
+        "userId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6"
+      }
+    ]
+  }
+}
