@@ -1,0 +1,1382 @@
+{
+  "updatedAt": "2026-01-21T11:13:56.910Z",
+  "createdAt": "2026-01-21T10:15:39.646Z",
+  "id": "qkPHRTpccSGKQfglWu5MY",
+  "name": "Tavily Tool",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 4
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -272,
+        208
+      ],
+      "id": "de0459ed-32c6-4bde-8a38-d97aff4d2078",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1PCnDZRwbIWoE1w8BJqu1xTfFt-vJNkTTl3_phseCdwo",
+          "mode": "list",
+          "cachedResultName": "blog_automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1PCnDZRwbIWoE1w8BJqu1xTfFt-vJNkTTl3_phseCdwo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1PCnDZRwbIWoE1w8BJqu1xTfFt-vJNkTTl3_phseCdwo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -80,
+        208
+      ],
+      "id": "e36e0a1b-cc88-4ddd-96fd-a4823c0ce65f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YYPCAHBhJe0nF26q",
+          "name": "Google Sheets account - Mihir DevOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        800,
+        192
+      ],
+      "id": "72e00bf4-bc06-4215-bceb-6a8135d0e553",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "urlset.url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        192
+      ],
+      "id": "4e571ad9-4aa3-42b4-9727-3e020af575de",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "loc",
+              "renameField": true,
+              "outputFieldName": "URL list"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        192
+      ],
+      "id": "8aef17c6-c1cd-47c8-a12e-3af30b17d4a5",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\"Generate an AI prompt for a realistic cover image about '{{ $('Checking Publish Date').item.json[\"Search Phrase\"] }}'.\"",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -240,
+        1232
+      ],
+      "id": "838968da-9642-48ab-8d4c-cce1dbe4bf81",
+      "name": "Image prompt",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Newsletter Topic: {{ $('Checking Publish Date').item.json['Search Phrase'] }}\nNewsletter style: {{ $('Checking Publish Date').item.json.Style }}\nChapters: {{ $('Checking Publish Date').item.json.chapters }}",
+        "options": {
+          "systemMessage": "=#Overview\nYou are an AI agent responsible for planning the sections of a blog article by creating an engaging table of contents tailord to the article's topic, style, and chapters.\n\n## Context\n-The blog article will vary in topic, style, and chapters depending on the request.\n-Your role is to use the openai and the tavily tool to search for relevant topics and craft a high-level, engaging table of contents.\n-The table of contents should resonate with the topic and encourage them to read the full article.\n\n## Instructions\n1. Analyse the incoming information, including the blog article topic, style, and chapters details.\n2. Use the \"tavily\" tool to research relevant and trending subtopics related to the main newsletter topic.\n3. Based on your findings, create a table of contents with high-level, engaging topics tailored to the style.\n4. Ensure the topics align with the article's tone and are structured to maintain the reader's interest.\n5. Include brief descriptions for each section if requested.\n6. Do not make more than the trequested chapters\n\n## Tools\n- tavily tool for internet research\n- openai model\n- Predefined audience profiles (if provided)\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -224,
+        480
+      ],
+      "id": "aadb8036-e6f2-4506-886a-d6345cbf7fcf",
+      "name": "Table of Contents"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Your job is to split out the table of contents into an individual item for each section. Output each section separately in a field called \"blogSections\". When doing so, keep in mind that the article style is {{ $('Checking Publish Date').item.json.Style }} and the topic of the article is {{ $('Checking Publish Date').item.json['Search Phrase'] }}. Finaly give a short description for each of the different sections\n\nHere is the table of contents: {{ $json.output }}",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        96,
+        480
+      ],
+      "id": "f48b3376-7ea1-4c88-a97a-c2a52d593477",
+      "name": "Create the Sections",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content.blogSections",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        608
+      ],
+      "id": "a0ddda1b-72ab-4d70-a2e7-1de1dcd27ab9",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Section Title: {{ $json.title }}\n\nSection Description: {{ $json.description }}\n\nBlog article style: {{ $('Checking Publish Date').item.json.Style }}\n\nWebsite URL list: {{ $('Aggregate').item.json['URL list'] }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are an AI agent responsible for delivering only the final content for a blog article section. Your role is to produce concise, well-researched, and audience-tailored content based solely on the provided inputs, with no prefacing statements or explanations. \n\n## Context\n-All necessary details, including the section title, description, and style will be provided.\n-The goal is to create engaging content that aligns with the audience's expectations and the article's objectives.\n- Content must be supported by research, with sources clearly cited using hyperlinks.\n- When it makes sense link to other article's from your website to create internal links. The infromation of the article's will be provided.\n\n## Instructions\n1. Write the final content without including any introductory or concluding remarks about the writing process.\n2. Conduct research using the tavily tool and the openai model to ensure credibility and relevance.\n3. Use the provided inputs to craft a focussed section, tailored to the style. \n4. Include citations seamlessly within the content using hyperlinks to the original sources or internal links.\n\n\n## Tools\n-Tavily (for research and citations)\n\n## Citation Guidelines\n- Use the tavily tool to gather information and cite sources\n- For each major claim or piece of information, include a hyperlinked inline citation.\n- Format citations as HTML links with descriptive text:\n<a href=\"[URL]\">[Source: Publication Name]</a>\n- When directly quoting from a source, use quotation marks and include the citation\n\n## SOP (Standard Operating Procedure)\n1. **Input Analysis**: Understand the section's title, description, style.\n2. **Research**: Use the tavily tool to gather relevant, credible information.\n3. **Content Writing**: Create a section based on the provided inputs, ensuring it is directly usable in the blog article.\n4. **Cite Sources**: Integrate hyperlinks to all references within the content.\n5. **Review and Deliver**: Proofread the content to ensure clarity, accuracy, and alignment with the style. \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        656,
+        448
+      ],
+      "id": "95449003-4627-41d7-b101-ddcc87cd1419",
+      "name": "Generate the Content"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        592
+      ],
+      "id": "5beade49-4b81-4b12-9fba-383b1a955fd0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "title"
+            },
+            {
+              "fieldToAggregate": "output"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        592
+      ],
+      "id": "e44749ab-228f-4c08-a8c3-edb544f54f2f",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=List of titles: {{ $json.title }}\nList of article content:{{ $json.output }}",
+        "options": {
+          "systemMessage": "=## Overview\nYou are an expert editor, specializing in creating and refining content to output a high quality, formatted blog article. You are given a list of titles and outputs and a list of url's that are already published on the website. You will use these to create a article tailored towards the defined target audience. Create a section in the article for each title, with a hyperlinked source or a internal link in each section based on the content. \n\n## Objective\n1. Create content for each title using the provided content\n2. Each section should contain inline citations, \"Don't leave any out\"\n3. Improve the flow of the blog article and format it for readability\n\n## Source Section\n1. Create ONE \"sources\" section at the end of the article\n2. Format each source entry consistently: <li><a href=\"[URL]\">[Publication Name] - [Article Title]</a></li>\n3. Include complete URL for each source\n4. Organize all sources alphabetically\n5. Verify all links are functional\n\n## Output Format\nThe article should be structured as HTML:\n-Do not output a title or an introduction, the output should start with the first article heading\n- Main content with hyperlink citations in each section.\n- Headers for each section of the article\n- Sources section at the end with all links\n\nIt is important to make the article lenght around {{ $('Checking Publish Date').item.json['word count'] }} words.\n\nToday's date is {{ $now }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -224,
+        912
+      ],
+      "id": "5c0306ee-e594-4235-9f9a-431e46d6ec81",
+      "name": "Content Editor"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Create a title for the incoming blog article. The style of the blog article is {{ $('Checking Publish Date').item.json.Style }}and the subject is: {{ $('Checking Publish Date').item.json['Search Phrase'] }}\n\nHere is the blog article:{{ $json.output }}\n\n# Output format\nOutput the title in plain text, no quotation marks, and capitalize the first letter of each word.\nExample: Is Artificial Intelligence A Friend Or Foe? \n\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        208,
+        912
+      ],
+      "id": "00da894f-ac48-471d-acd7-58d8958ef9bb",
+      "name": "Title Maker",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "tavily",
+        "workflowId": {
+          "__rl": true,
+          "value": "8vaOCCaSr9YH9iME",
+          "mode": "list",
+          "cachedResultName": "Tavily Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input data": "input data"
+          },
+          "matchingColumns": [
+            "input data"
+          ],
+          "schema": [
+            {
+              "id": "input data",
+              "displayName": "input data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        640
+      ],
+      "id": "1360ad51-c1d6-413a-81ae-10aeb20de996",
+      "name": "tavily tool"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        640
+      ],
+      "id": "f5d5f414-424e-42d5-bb25-c53a148a7632",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GExCaoi8fH8paDh5",
+          "name": "OpenAi account - DevOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6bb2baa2-21ab-4c52-939e-26215b7b7415",
+              "leftValue": "={{ $json['Date To Be Published'] }}",
+              "rightValue": "={{ $json.date ? new Date($json.date).toLocaleDateString(\"en-US\", { month: \"long\", day: \"numeric\", year: \"numeric\" }) : \"\" }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        208
+      ],
+      "id": "dcbdc5dd-bf2c-45e4-8845-0bb08c0cd2aa",
+      "name": "Checking Publish Date"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Website }}/post-sitemap.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        624,
+        192
+      ],
+      "id": "4f942e2a-6939-4987-b18e-abe2c6f3978a",
+      "name": "Getting All URL's"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=output a other version of the title:{{ $('Title Maker').item.json.message.content }}. Make this all lowercase and put a (-) between each word instead of the words. Call this output \"slug\". \n\nexamples:\n1: this-is-a-slug\n2: create-a-slug"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        624,
+        912
+      ],
+      "id": "3fd14c93-110a-42cd-a5da-54c78707a7cf",
+      "name": "Making Slug",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Make a short description of around 160 characters of what the article is about: {{ $('Content Editor').item.json.output }}. Call this output \"description\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1040,
+        912
+      ],
+      "id": "4d44ce04-c404-44ce-82bc-35b8e75ed71d",
+      "name": "Article Description",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Make a short text of 100 characters max that describes what the image is about. This is the image prompt:{{ $json.message.content }} Call this output \"alt_text\".\n\n\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        64,
+        1232
+      ],
+      "id": "9627d882-9de5-4c6b-921c-3fe2a5579a14",
+      "name": "Alt_Text Maker",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=Generate a photographic image to be used as the cover image for the article titled: {{ $('Title Maker').item.json.message.content }}. This is the prompt for the image: {{ $json.message.content }}, photography, realistic, sigma 85mm f/1.4.",
+        "options": {
+          "size": "1792x1024",
+          "style": "natural",
+          "returnImageUrls": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        384,
+        1232
+      ],
+      "id": "bacfee09-0e0d-48b3-b2e1-04bcb3f68501",
+      "name": "Generate Featured Image",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        544,
+        1232
+      ],
+      "id": "774863fa-5a6f-41e5-8e56-07cc75931617",
+      "name": "Resize Image"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Checking Publish Date').item.json.Website }}/wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension  }}"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType  }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        1232
+      ],
+      "id": "8d53be7e-94be-4b23-aa07-d9f74850d414",
+      "name": "Upload Image To WP",
+      "credentials": {
+        "wordpressApi": {
+          "id": "GX9UmHHZwa09DbqD",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Checking Publish Date').item.json.Website }}/wp-json/wp/v2/media/{{ $json.id }} ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Title Maker').item.json.message.content }}"
+            },
+            {
+              "name": "slug",
+              "value": "={{ $('Making Slug').item.json.message.content }}"
+            },
+            {
+              "name": "alt_text",
+              "value": "={{ $('Alt_Text Maker').item.json.message.content }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Title Maker').item.json.message.content }}"
+            },
+            {
+              "name": "description",
+              "value": "=this image is about: {{ $('Title Maker').item.json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        1232
+      ],
+      "id": "5e22d229-7995-4453-8862-e936629fa040",
+      "name": "Update Meta Data",
+      "credentials": {
+        "wordpressApi": {
+          "id": "GX9UmHHZwa09DbqD",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Title Maker').item.json.message.content }}",
+        "additionalFields": {
+          "authorId": "={{ $('Checking Publish Date').item.json['Author ID'] }}",
+          "content": "={{ $('Content Editor').item.json.output }}",
+          "slug": "={{ $('Making Slug').item.json.message.content }}",
+          "status": "=draft",
+          "categories": "={{ $('Checking Publish Date').item.json['Category ID'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        1232
+      ],
+      "id": "50c1acf3-61dc-4c59-b26d-db359bc15372",
+      "name": "Post Blog To WP",
+      "credentials": {
+        "wordpressApi": {
+          "id": "GX9UmHHZwa09DbqD",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Checking Publish Date').item.json.Website }}/wp-json/wp/v2/posts/{{ $json.id}}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Update Meta Data').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1216,
+        1232
+      ],
+      "id": "a8034806-8c92-4f1b-9779-55d6cdb9c6ca",
+      "name": "Set Featured Image",
+      "credentials": {
+        "wordpressApi": {
+          "id": "GX9UmHHZwa09DbqD",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        640
+      ],
+      "id": "a1885061-d8b4-4554-a8b3-b90ae423b72d",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "tavily",
+        "workflowId": {
+          "__rl": true,
+          "value": "8vaOCCaSr9YH9iME",
+          "mode": "list",
+          "cachedResultName": "Tavily Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "input data": "input data"
+          },
+          "matchingColumns": [
+            "input data"
+          ],
+          "schema": [
+            {
+              "id": "input data",
+              "displayName": "input data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        848,
+        640
+      ],
+      "id": "821a2f1e-8459-4da6-8113-16156b11b453",
+      "name": "tavily tool1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        1072
+      ],
+      "id": "36a3877f-5eb5-449d-bd27-63bc81cba530",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Getting The Subject Information\n",
+        "height": 220,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "b9c0ba22-e0d3-4056-8e4a-da1cb192f539",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Gathering All Website URLs\n",
+        "height": 240,
+        "width": 760,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        576,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "9b2efd19-9893-459a-8785-36296f5501d5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Creating The Content\n\n",
+        "height": 380,
+        "width": 1660,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "264ded08-e7cc-44d3-9400-d40676cd1607",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Creating The Featured Image\n\n",
+        "height": 240,
+        "width": 980,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        1168
+      ],
+      "typeVersion": 1,
+      "id": "9770a6d2-8209-4228-92d9-44926db3477e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Uploading To Wordpress\n\n",
+        "height": 240,
+        "width": 680,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        1168
+      ],
+      "typeVersion": 1,
+      "id": "f94007e5-28fc-49a7-b4e7-8108c4973667",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Adding Extra Information\n\n\n",
+        "height": 320,
+        "width": 1660,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        816
+      ],
+      "typeVersion": 1,
+      "id": "25f04d56-b32d-49ab-8090-b7a6c86d60c5",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "input data"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -304,
+        -64
+      ],
+      "id": "9b360590-b9e6-4019-a598-b4e0e0beda79",
+      "name": "Workflow Input Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"api_key\": \"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\",\n    \"query\": \"{{ $json['input data'] }}\",\n    \"search_depth\": \"basic\",\n    \"include_answer\": true,\n    \"topic\": \"news\",\n    \"include_raw_content\": true,\n    \"max_results\": 3\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -112,
+        -64
+      ],
+      "id": "dec748e1-24a8-44c2-8a63-d61c602b62f7",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2af527a4-bca1-4052-9315-32f7a7709c3b",
+              "name": "response",
+              "value": "=[Source 1]\nURL: {{ $json.results[0].url }}\nContent: {{ $json.results[0].content }}\n\n[Source 2]\nURL: {{ $json.results[1].url }}\nContent: {{ $json.results[1].content }}\n\n[Source 3]\nURL: {{ $json.results[2].url }}\nContent: {{ $json.results[2].content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        96,
+        -64
+      ],
+      "id": "c8e4dcc6-053e-4866-bf19-c49811120822",
+      "name": "Response"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Checking Publish Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Table of Contents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image prompt": {
+      "main": [
+        [
+          {
+            "node": "Alt_Text Maker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Table of Contents": {
+      "main": [
+        [
+          {
+            "node": "Create the Sections",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the Sections": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Generate the Content",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Generate the Content": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Content Editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Editor": {
+      "main": [
+        [
+          {
+            "node": "Title Maker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Title Maker": {
+      "main": [
+        [
+          {
+            "node": "Making Slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tavily tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Table of Contents",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Table of Contents",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checking Publish Date": {
+      "main": [
+        [
+          {
+            "node": "Getting All URL's",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting All URL's": {
+      "main": [
+        [
+          {
+            "node": "XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Making Slug": {
+      "main": [
+        [
+          {
+            "node": "Article Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Description": {
+      "main": [
+        [
+          {
+            "node": "Image prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alt_Text Maker": {
+      "main": [
+        [
+          {
+            "node": "Generate Featured Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Featured Image": {
+      "main": [
+        [
+          {
+            "node": "Resize Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resize Image": {
+      "main": [
+        [
+          {
+            "node": "Upload Image To WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image To WP": {
+      "main": [
+        [
+          {
+            "node": "Update Meta Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Meta Data": {
+      "main": [
+        [
+          {
+            "node": "Post Blog To WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Blog To WP": {
+      "main": [
+        [
+          {
+            "node": "Set Featured Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate the Content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tavily tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Generate the Content",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Editor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "854fa133-d7aa-48a5-85a0-fc685f2ee08f",
+  "activeVersionId": null,
+  "versionCounter": 13,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-01-21T10:15:39.664Z",
+      "createdAt": "2026-01-21T10:15:39.664Z",
+      "role": "workflow:owner",
+      "workflowId": "qkPHRTpccSGKQfglWu5MY",
+      "projectId": "aDl9WwKN0ta9uBVo",
+      "project": {
+        "updatedAt": "2026-01-12T11:51:24.516Z",
+        "createdAt": "2026-01-12T11:51:06.144Z",
+        "id": "aDl9WwKN0ta9uBVo",
+        "name": "Owner Owner <admin@vmi2632825.contaboserver.net>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T11:51:06.144Z",
+            "createdAt": "2026-01-12T11:51:06.144Z",
+            "userId": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+            "projectId": "aDl9WwKN0ta9uBVo",
+            "user": {
+              "updatedAt": "2026-01-21T05:00:52.000Z",
+              "createdAt": "2026-01-12T11:51:05.224Z",
+              "id": "3e7bb516-1bcc-4dba-8501-c94eaaa245f6",
+              "email": "admin@vmi2632825.contaboserver.net",
+              "firstName": "Owner",
+              "lastName": "Owner",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T11:59:17.141Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "automationGoalDevops": [
+                  "cloud-infrastructure-orchestration",
+                  "ci-cd",
+                  "data-syncing",
+                  "incident-response",
+                  "monitoring-alerting",
+                  "reporting",
+                  "ticketing-systems-integrations"
+                ],
+                "companyType": "saas",
+                "role": "devops"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nYPf4T1dFw_BwSQbc0GME",
+                "userActivatedAt": 1768222892386,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1768571009887
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-21",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
