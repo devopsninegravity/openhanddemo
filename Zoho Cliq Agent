@@ -1,0 +1,1020 @@
+{
+  "updatedAt": "2026-01-30T06:13:07.532Z",
+  "createdAt": "2026-01-30T06:10:47.959Z",
+  "id": "1x17k5nqAhXd7TMUkAA1W",
+  "name": "Zoho Cliq Agent",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.headers['dre-scope-id'] }}",
+        "contextWindowLength": 11
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        400
+      ],
+      "id": "a57dc6c6-1b81-4902-b413-290ad5403591",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "## utility tools",
+        "height": 440,
+        "width": 620,
+        "color": 5
+      },
+      "id": "52775159-5aab-432d-a750-27411d47bd3e",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1296,
+        672
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "toolDescription": "Download a file or image from a URL",
+        "url": "={{ $fromAI('URL', `url to search the web, download an image or download a document`, 'string') }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "22fd4171-5de1-4ed5-886e-3afe2b312d19",
+      "name": "HTTP Download a file or image",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "position": [
+        -816,
+        928
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Makes an HTTP request to browse a URL and returns the response data. ",
+        "url": "={{ $fromAI('URL', `url to search the web, download an image or download a document`, 'string') }}",
+        "options": {}
+      },
+      "id": "0d9e96c4-e2a7-4581-9779-fc236f1d8f80",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "position": [
+        -960,
+        928
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.ninegravity.co/mcp/utility-tools",
+        "serverTransport": "httpStreamable",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        400
+      ],
+      "id": "078c8912-ebde-444b-891f-d25df44aaa0c",
+      "name": "Utility Tools"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update the description, date, time and summary of an event in Google Calendar",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "c_62b0aa8c5d65d5d73206edfccb973f457c760e5ceea72673a9b437064d5dd0a9@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "eventId": "={{ $fromAI(\"EVENT_ID\", \"id of the event that wants to be deleted\", \"string\") }}",
+        "updateFields": {
+          "description": "={{ $fromAI(\"event_description\", \"The event description\", \"string\") }}",
+          "end": "={{ $fromAI(\"end\", \"End of the event with date, time and local timezone \", \"string\") }}",
+          "start": "={{ $fromAI(\"start\", \"Start of the event with date, time and local timezone\", \"string\") }}",
+          "summary": "={{ $fromAI(\"event_title\", \"The event title\", \"string\") }}"
+        }
+      },
+      "id": "9f49bdec-7e1f-46cd-8e5e-ddc3ce80a633",
+      "name": "UpdateEvent",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -304,
+        864
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "c_62b0aa8c5d65d5d73206edfccb973f457c760e5ceea72673a9b437064d5dd0a9@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "eventId": "={{ $fromAI('Event_ID', 'id of the event that wants to be deleted', 'string') }}",
+        "options": {}
+      },
+      "id": "cf88353f-07ce-45b6-a0f1-d7d0cf6b7726",
+      "name": "DeleteEvent",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -176,
+        864
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "c_b9236d76068bf652636ba18d06f50c4d7dfea1604ddce360b45a527dd5dd34e1@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "start": "={{ $fromAI(\"start\", \"Event Start date, time and local timezone\", \"string\") }}",
+        "end": "={{ $fromAI(\"end\", \"Event End date, time and local timezone\", \"string\") }}",
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI(\"event_description\", \"The event description\", \"string\") }}",
+          "summary": "={{ $fromAI(\"event_title\", \"The event title\", \"string\") }}"
+        }
+      },
+      "id": "9f42397d-e88a-487a-91ca-85d66f472ada",
+      "name": "CreateEvent",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -416,
+        864
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Add attendees to an event",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "c_62b0aa8c5d65d5d73206edfccb973f457c760e5ceea72673a9b437064d5dd0a9@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "eventId": "={{ $fromAI(\"EVENT_ID\", \"id of the event that wants to be deleted\", \"string\") }}",
+        "updateFields": {
+          "attendeesUi": {
+            "values": {
+              "attendees": [
+                "={{ $fromAI('attendees0_Attendees', 'email addresses of the people that needs to be invited to the event', 'string') }}"
+              ]
+            }
+          }
+        }
+      },
+      "id": "4632c1de-285e-48a7-9063-42ae0ed8c26f",
+      "name": "addAttendeesToEvent",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -304,
+        1056
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c_62b0aa8c5d65d5d73206edfccb973f457c760e5ceea72673a9b437064d5dd0a9@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        1056
+      ],
+      "id": "44532fbe-8e84-4808-893f-e380a379e8ba",
+      "name": "Get Event/s"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get recent email messages in Gmail",
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "filters": {}
+      },
+      "id": "4c27618c-f715-452b-95c3-68151b192757",
+      "name": "Get many messages in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        64,
+        848
+      ],
+      "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', `message id that we want to reply to `, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `reply message that we want to send`, 'string') }}",
+        "options": {}
+      },
+      "id": "96f61b52-8004-4c24-b88f-359fc4560f96",
+      "name": "Reply to a message in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        448,
+        848
+      ],
+      "webhookId": "564d0d41-cbfa-45b0-9af9-90765b60105a",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "getAll",
+        "limit": 20,
+        "options": {}
+      },
+      "id": "9b254733-0b40-4ba2-9534-825d1cc0333f",
+      "name": "Get many drafts in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        48,
+        1280
+      ],
+      "webhookId": "dd41e03f-b056-45b2-8389-8ba5ec2e2782",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "get",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Draft_ID', `draft id of a gmail message`, 'string') }}",
+        "options": {}
+      },
+      "id": "8feb93d8-81a4-4022-9a6d-4d657ffd98c5",
+      "name": "Get a draft in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        240,
+        1280
+      ],
+      "webhookId": "6cda08e0-01dc-4c99-bf01-c9562428f89b",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `subject of the email draft`, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `text content of the email draft`, 'string') }}",
+        "options": {
+          "ccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CC', `cc email address`, 'string') }}",
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To_Email', `recipient email address`, 'string') }}"
+        }
+      },
+      "id": "74597a82-0cb8-4aa2-be3e-93fb4d886bc8",
+      "name": "Create a draft in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        608,
+        1280
+      ],
+      "webhookId": "1886deba-2b0e-4fe2-8b92-1eaa101dde01",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "limit": 20,
+        "filters": {
+          "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `gmail search operator. To search email from a certain sender, start with from: . To search emails with a certain subject, start with subject:`, 'string') }}"
+        }
+      },
+      "id": "e7944d40-11ff-4687-a050-21a2e091243a",
+      "name": "Get many threads in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        240,
+        848
+      ],
+      "webhookId": "f78a8dcd-2dec-4708-8b9e-981e6115d368",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thread_ID', `thread id of ta gmail message or conversation history`, 'string') }}",
+        "options": {}
+      },
+      "id": "3f655e25-6975-47a0-96db-736d9795bbf4",
+      "name": "Get a thread in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        48,
+        1072
+      ],
+      "webhookId": "f78a8dcd-2dec-4708-8b9e-981e6115d368",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "resource": "label"
+      },
+      "id": "d2312597-431f-4db7-b326-9ec43c669620",
+      "name": "Get many labels in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        240,
+        1072
+      ],
+      "webhookId": "59ed5561-3e25-42d8-91fa-54a9ae371c81",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', `recipient email address`, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `subject of the email to send`, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `email message content to be sent`, 'string') }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CC', `cc email addresses (optional)`, 'string') }}"
+        }
+      },
+      "id": "24e3f1e8-9beb-4441-984c-2333b59c0d23",
+      "name": "Send a message in Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        624,
+        1072
+      ],
+      "webhookId": "3ef63c87-0250-40e8-94c6-b64164366891",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Search for emails ive sent",
+        "operation": "getAll",
+        "filters": {
+          "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `gmail search operator. To search for subject with certain keywords, use the operator Subject: `, 'string') }}",
+          "sender": "nikp@ninegravity.co"
+        }
+      },
+      "id": "64d36f37-3994-4e2c-b3e4-da791de84c98",
+      "name": "search sent emails",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        624,
+        848
+      ],
+      "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get recent emails ive sent",
+        "operation": "getAll",
+        "filters": {
+          "sender": "nikp@ninegravity.co"
+        }
+      },
+      "id": "6ad81a17-ab2e-4e62-adfe-38ca75e9ffa6",
+      "name": "Get emails sent",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        448,
+        1072
+      ],
+      "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Search emails received",
+        "operation": "getAll",
+        "filters": {
+          "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `keywords in the subject that we are searching for. Use google search operator. To search for keywords in the subject, start with Subject: `, 'string') }}"
+        }
+      },
+      "id": "7405c4f8-330e-4aab-80e8-ad125946cbce",
+      "name": "search emails received",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        448,
+        1264
+      ],
+      "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.ninegravity.co/mcp/Calendar",
+        "serverTransport": "httpStreamable",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        400
+      ],
+      "id": "318c3d4c-95da-4781-8fc7-2bca2753a072",
+      "name": "Google Calendar"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.ninegravity.co/mcp/gmail",
+        "serverTransport": "httpStreamable",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        400
+      ],
+      "id": "4d154536-4abf-4002-a955-6cb9c75750f3",
+      "name": "Gmail"
+    },
+    {
+      "parameters": {
+        "path": "utility-tools"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        1232
+      ],
+      "id": "9ff3ecac-83df-49c8-88e4-d33fba64eede",
+      "name": "Utility tools",
+      "webhookId": "bea1f708-e0c6-47da-a917-d2f00ac2b1f2"
+    },
+    {
+      "parameters": {
+        "path": "Calendar"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        1056
+      ],
+      "id": "60ca0726-1c46-425b-adeb-301b113d7ecd",
+      "name": "Google Calendar1",
+      "webhookId": "1eeb4a7f-3f8f-416f-b627-45714847749f"
+    },
+    {
+      "parameters": {
+        "path": "gmail"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        320,
+        1488
+      ],
+      "id": "23f09816-cb74-4cc8-927f-850cd997a1fe",
+      "name": "Gmails",
+      "webhookId": "223aea4e-b73d-4170-821f-ead8c3b261e8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cliq.zoho.in/company/60039487364/api/v2/bots/ragchatbot/incoming?zapikey=1001.70513af8c2bb533b9fad1abc1c34a2d8.db67c3fcf4224c25a1d28841450ad78d",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        112,
+        192
+      ],
+      "id": "64789355-f00c-425f-be10-7ccc6e94e1ef",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cb216225-a203-401e-97e9-bc1688a0fcf7",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        192
+      ],
+      "id": "9a961944-4577-4f85-b775-203815e274b9",
+      "name": "Webhook",
+      "webhookId": "cb216225-a203-401e-97e9-bc1688a0fcf7"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        400
+      ],
+      "id": "f9d62e95-f094-48b9-82b3-96bda76d4743",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# 🧠 AI Assistant Setup – MCP Servers\n\nYou are a **personal AI assistant** connected to the following tools via MCP servers:\n\n## ✅ Connected Tools\n\n- Google Calendar\n- Google Drive  \n- Gmail  \n- X (Twitter)  \n- LinkedIn  \n- Utility Tools:\n  - HTTP request (web search)\n  - File and image download\n\n---\n\n## 📅 Time Handling & Scheduling\n\n- **Always use the `Format Date Time` tool** for:\n  - Scheduling\n  - Deadlines\n  - Time comparisons\n  - Calendar events\n\n> ❗ **Never assume today’s date.**  \n> ❓ If the time/date is unclear, **ask the user.**\n> Use Aisa/Kolkata timezone \n> if not mentioned use 1hr for event time dont ask user\n\n\n---\n\n## 📧 Email Responses\n\n- Use a **clean, professional tone**.\n- Sign off as: **Nik Patel** (if needed)\n\n---\n\n## 🗓 Google Calendar Events\n\n- When creating/editing events, **include the event ID** in your message.\n\n---\n## 🧾 Response Formatting Guidelines\n\nAll responses must be:\n\n- ✅ Cleanly formatted (use paragraphs, bullets, or headings as needed)\n- ✅ Clear and easy to read\n- 🚫 Do not include filler, assumptions, or vague content\n\n---\n## 📥 Message Handler\n\nYou will receive a message structured like:\n\n{{ $json.body.message }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        112,
+        -176
+      ],
+      "id": "47f37099-d60a-4791-98ac-efe731cea366",
+      "name": "AI Agent1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=You are **Nik Patel’s personal AI assistant** connected to the following MCP servers and tools:\n\n## ✅ Connected Tools\n- Google Calendar\n- Gmail\n- Utility Tools:\n  - HTTP request (web search)\n  - File and image download\n\n---\n\n## 🕐 Timezone & Scheduling\n- Always work in **Asia/Kolkata** timezone.\n- If no event duration is specified, default to **1 hour**.\n- Use these for all scheduling, deadlines, and comparisons:\n  - `CurrentDate: {{ $now.setZone('Asia/Kolkata').toFormat('d LLLL yyyy') }}`\n  - `CurrentTime: {{ $now.setZone('Asia/Kolkata').toFormat('HH:mm') }}`\n  - `CurrentDay: {{ $now.setZone('Asia/Kolkata').toFormat('cccc') }}`\n\n---\n\n## 📧 Email Handling\n- Use a **clean, professional tone** for all Gmail interactions.\n- Sign off as **Nik Patel** when needed.\n- **Never perform delete operations on Gmail.**\n\n---\n\n## 🗓 Google Calendar Rules\n- Always include the **event ID** when creating or editing events.\n- When asked to delete something, **always assume it refers to a calendar event**.\n- Perform deletions exclusively through **Google Calendar**.\n- If an event name is provided for deletion, **search Google Calendar, summary=title** for that name and delete it.\n- If no duration is mentioned for new events, use the default 1-hour duration.\n\n---\n\n## 🧭 Command Routing\n- All “delete”, “remove”, or “cancel” commands must use **Google Calendar** — never Gmail.\n- Route Gmail actions only for:\n  - Reading or composing emails\n  - Sending messages or replies\n- Route Calendar actions for:\n  - Creating, updating, or deleting events\n  - Listing or retrieving schedule data\n\n---\n\n## 🧾 Response Formatting\n- Format responses cleanly with clear headings or bullet points.\n- Keep language professional and concise.\n- Do not include filler or assumptions.\n\n---\n\n### ✅ Summary of Deletion Rule\n> All deletion-related commands (`delete`, `remove`, `cancel`) must be executed via **Google Calendar**. Gmail is strictly for read/send operations — **no email deletions ever.**\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        192
+      ],
+      "id": "be7aa257-a214-4348-a53f-1eb5106c9b86",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -720,
+        400
+      ],
+      "id": "dd8bfbad-7bc0-4bf7-a463-0b7e4b55371e",
+      "name": "OpenAI Chat Model1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c_b9236d76068bf652636ba18d06f50c4d7dfea1604ddce360b45a527dd5dd34e1@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        1328
+      ],
+      "id": "c5a8509b-39e9-42a6-ad22-4c178abb638f",
+      "name": "Get many events in Google Calendar"
+    }
+  ],
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Download a file or image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Utility tools",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Utility tools",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Utility Tools": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UpdateEvent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeleteEvent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateEvent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "addAttendeesToEvent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Event/s": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many drafts in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many threads in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a thread in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many labels in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search sent emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get emails sent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search emails received": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "917779d1-4788-4c2b-83c6-237a597640e4",
+  "activeVersionId": null,
+  "versionCounter": 2,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-01-30T06:10:47.968Z",
+      "createdAt": "2026-01-30T06:10:47.968Z",
+      "role": "workflow:owner",
+      "workflowId": "1x17k5nqAhXd7TMUkAA1W",
+      "projectId": "CFdHyYwi8HDKofY6",
+      "project": {
+        "updatedAt": "2026-01-12T12:21:32.805Z",
+        "createdAt": "2026-01-12T12:20:00.564Z",
+        "id": "CFdHyYwi8HDKofY6",
+        "name": "Shyam Patel <shyam@ninegravity.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T12:20:00.571Z",
+            "createdAt": "2026-01-12T12:20:00.571Z",
+            "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+            "projectId": "CFdHyYwi8HDKofY6",
+            "user": {
+              "updatedAt": "2026-01-30T04:48:42.000Z",
+              "createdAt": "2026-01-12T12:20:00.540Z",
+              "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+              "email": "shyam@ninegravity.com",
+              "firstName": "Shyam",
+              "lastName": "Patel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T12:21:48.104Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "companyType": "personal",
+                "reportedSource": "friend"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "iRGT9Oc6gUnKyubocqc3N",
+                "userActivated": true,
+                "userActivatedAt": 1768222886305,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 2,
+                  "lastShownAt": 1769491912669
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
