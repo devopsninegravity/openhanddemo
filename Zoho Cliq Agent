@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-01-30T06:13:07.532Z",
+  "updatedAt": "2026-01-31T08:59:17.972Z",
   "createdAt": "2026-01-30T06:10:47.959Z",
   "id": "1x17k5nqAhXd7TMUkAA1W",
   "name": "Zoho Cliq Agent",
@@ -233,7 +233,13 @@
         848
       ],
       "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -251,7 +257,13 @@
         848
       ],
       "webhookId": "564d0d41-cbfa-45b0-9af9-90765b60105a",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -268,7 +280,13 @@
         1280
       ],
       "webhookId": "dd41e03f-b056-45b2-8389-8ba5ec2e2782",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -285,7 +303,13 @@
         1280
       ],
       "webhookId": "6cda08e0-01dc-4c99-bf01-c9562428f89b",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -305,7 +329,13 @@
         1280
       ],
       "webhookId": "1886deba-2b0e-4fe2-8b92-1eaa101dde01",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -323,7 +353,13 @@
         848
       ],
       "webhookId": "f78a8dcd-2dec-4708-8b9e-981e6115d368",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -340,7 +376,13 @@
         1072
       ],
       "webhookId": "f78a8dcd-2dec-4708-8b9e-981e6115d368",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -354,7 +396,13 @@
         1072
       ],
       "webhookId": "59ed5561-3e25-42d8-91fa-54a9ae371c81",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -375,7 +423,13 @@
         1072
       ],
       "webhookId": "3ef63c87-0250-40e8-94c6-b64164366891",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -395,7 +449,13 @@
         848
       ],
       "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -414,7 +474,13 @@
         1072
       ],
       "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -433,7 +499,13 @@
         1264
       ],
       "webhookId": "cd12e91c-ed46-40f4-8540-6ace25c53a38",
-      "typeVersion": 2.1
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LK57ok8sJ95Xx2SA",
+          "name": "Gmail account Shyam"
+        }
+      }
     },
     {
       "parameters": {
@@ -954,9 +1026,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "917779d1-4788-4c2b-83c6-237a597640e4",
+  "versionId": "fcfcbbd7-406f-4dc9-9a73-534cc36f817a",
   "activeVersionId": null,
-  "versionCounter": 2,
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
@@ -981,7 +1053,7 @@
             "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
             "projectId": "CFdHyYwi8HDKofY6",
             "user": {
-              "updatedAt": "2026-01-30T04:48:42.000Z",
+              "updatedAt": "2026-01-31T08:45:48.000Z",
               "createdAt": "2026-01-12T12:20:00.540Z",
               "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
               "email": "shyam@ninegravity.com",
@@ -1007,7 +1079,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-01-29",
+              "lastActiveAt": "2026-01-30",
               "isPending": false
             }
           }
