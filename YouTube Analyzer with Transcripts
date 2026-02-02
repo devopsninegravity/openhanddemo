@@ -1,0 +1,1006 @@
+{
+  "updatedAt": "2026-02-02T12:20:54.787Z",
+  "createdAt": "2026-02-02T11:39:20.032Z",
+  "id": "5JHFCl9_mievvbCrO4pMd",
+  "name": "YouTube Analyzer with Transcripts",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "aac1e38d-aa81-45ea-bb1a-a1520c5d45ef",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -2608,
+        -1088
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split channel URLs into array and calculate date cutoff\nconst channelUrls = $input.first().json.channelUrls.split('\\n').filter(url => url.trim());\nconst monthsBack = parseInt($input.first().json.monthsBack) || 6;\n\n// Calculate date 6 months ago\nconst cutoffDate = new Date();\ncutoffDate.setMonth(cutoffDate.getMonth() - monthsBack);\n\n// Extract channel IDs/handles from URLs\nconst channels = channelUrls.map(url => {\n  url = url.trim();\n  \n  // Handle different YouTube URL formats\n  let channelIdentifier = '';\n  \n  if (url.includes('@')) {\n    // Handle format: youtube.com/@channelname\n    channelIdentifier = url.split('@')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/channel/')) {\n    // Handle format: youtube.com/channel/UC...\n    channelIdentifier = url.split('/channel/')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/c/')) {\n    // Handle format: youtube.com/c/channelname\n    channelIdentifier = url.split('/c/')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/user/')) {\n    // Handle format: youtube.com/user/username\n    channelIdentifier = url.split('/user/')[1]?.split('/')[0]?.split('?')[0];\n  }\n  \n  return {\n    originalUrl: url,\n    channelIdentifier: channelIdentifier,\n    isHandle: url.includes('@'),\n    cutoffDate: cutoffDate.toISOString()\n  };\n}).filter(ch => ch.channelIdentifier);\n\nreturn channels.map(ch => ({ json: ch }));"
+      },
+      "id": "1bda9956-fdc3-4e5e-817a-ee1dc4990b19",
+      "name": "Parse Channel URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1920,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "channelId": "UC9x0AN7BWHpCDHSm9NiJFJQ",
+        "part": [
+          "id",
+          "snippet",
+          "contentDetails"
+        ]
+      },
+      "id": "b8642753-93be-4417-8022-cc70d108be35",
+      "name": "Get Channel Info",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -1696,
+        -368
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "hcD591g2Qxsk9SA3",
+          "name": "YouTube account"
+        }
+      },
+      "notes": "Connect your YouTube API credentials"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract uploads playlist ID from channel data\nconst channelData = $input.first().json;\nconst inputData = $('Parse Channel URLs').first().json;\n\nreturn [{\n  json: {\n    channelId: channelData.id,\n    channelTitle: channelData.snippet?.title || 'Unknown',\n    channelDescription: channelData.snippet?.description || '',\n    uploadsPlaylistId: channelData.contentDetails?.relatedPlaylists?.uploads,\n    subscriberCount: channelData.statistics?.subscriberCount || 'Hidden',\n    originalUrl: inputData.originalUrl,\n    cutoffDate: inputData.cutoffDate\n  }\n}];"
+      },
+      "id": "f13bd16a-6802-425a-a377-ea1c8baea4a6",
+      "name": "Extract Uploads Playlist",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1472,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "playlistItem",
+        "operation": "getAll",
+        "playlistId": "={{ $json.uploadsPlaylistId }}",
+        "part": [
+          "snippet",
+          "contentDetails"
+        ],
+        "limit": 50,
+        "options": {}
+      },
+      "id": "bec42e02-bf47-48a8-bbfb-c2dbfb127ab5",
+      "name": "Get Playlist Videos",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        -368
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "hcD591g2Qxsk9SA3",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter videos by date and extract details\nconst channelInfo = $('Extract Uploads Playlist').first().json;\nconst cutoffDate = new Date(channelInfo.cutoffDate);\nconst videos = $input.all();\n\nconst filteredVideos = videos\n  .filter(item => {\n    const publishDate = new Date(item.json.snippet?.publishedAt || item.json.contentDetails?.videoPublishedAt);\n    return publishDate >= cutoffDate;\n  })\n  .map(item => {\n    const snippet = item.json.snippet || {};\n    const publishDate = snippet.publishedAt || item.json.contentDetails?.videoPublishedAt;\n    \n    return {\n      json: {\n        // Channel Info\n        channelId: channelInfo.channelId,\n        channelTitle: channelInfo.channelTitle,\n        channelUrl: channelInfo.originalUrl,\n        \n        // Video Info\n        videoId: item.json.contentDetails?.videoId || snippet.resourceId?.videoId,\n        videoTitle: snippet.title || '',\n        videoDescription: snippet.description || '',\n        videoUrl: `https://www.youtube.com/watch?v=${item.json.contentDetails?.videoId || snippet.resourceId?.videoId}`,\n        thumbnailUrl: snippet.thumbnails?.high?.url || snippet.thumbnails?.default?.url || '',\n        publishedAt: publishDate,\n        publishedDate: publishDate ? new Date(publishDate).toLocaleDateString() : '',\n        \n        // For AI Analysis\n        contentForAnalysis: `Title: ${snippet.title}\\n\\nDescription: ${snippet.description}`\n      }\n    };\n  });\n\nreturn filteredVideos.length > 0 ? filteredVideos : [{ json: { noVideos: true, channelTitle: channelInfo.channelTitle } }];"
+      },
+      "id": "deb76839-1535-488b-b477-e44299bb1529",
+      "name": "Filter Videos (Last 6 Months)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.noVideos }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9176f29d-efa6-40b0-953d-cbf4988b8c22",
+      "name": "Has Videos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -800,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze this YouTube video and provide a brief structured analysis. Return ONLY a JSON object with these fields:\n- category: The main content category (e.g., \"Tutorial\", \"Review\", \"Vlog\", \"News\", \"Entertainment\", \"Educational\", etc.)\n- topics: Array of 3-5 main topics/keywords\n- summary: A 1-2 sentence summary of what the video is about\n- contentType: \"short-form\" (under 60 sec likely), \"standard\", or \"long-form\" (likely over 20 min)\n- targetAudience: Brief description of target audience\n\nVideo Content:\n{{ $json.contentForAnalysis }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "ee505803-e359-4ab7-a9d0-00cafb84a799",
+      "name": "AI Content Analysis",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        -576,
+        -464
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      },
+      "notes": "Optional: Add OpenAI credentials for AI analysis. Can be replaced with Claude/other LLM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI analysis and combine with video data\nconst videoData = $('Has Videos?').first().json;\nlet aiAnalysis = {};\n\ntry {\n  const aiResponse = $input.first().json.message?.content || $input.first().json.text || '{}';\n  // Try to extract JSON from the response\n  const jsonMatch = aiResponse.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    aiAnalysis = JSON.parse(jsonMatch[0]);\n  }\n} catch (e) {\n  aiAnalysis = {\n    category: 'Uncategorized',\n    topics: [],\n    summary: 'Analysis failed',\n    contentType: 'unknown',\n    targetAudience: 'General'\n  };\n}\n\nreturn [{\n  json: {\n    ...videoData,\n    category: aiAnalysis.category || 'Uncategorized',\n    topics: Array.isArray(aiAnalysis.topics) ? aiAnalysis.topics.join(', ') : (aiAnalysis.topics || ''),\n    summary: aiAnalysis.summary || '',\n    contentType: aiAnalysis.contentType || 'standard',\n    targetAudience: aiAnalysis.targetAudience || 'General',\n    analyzedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "2b0af253-0bff-4e80-89e3-dcb532fc25ae",
+      "name": "Merge Analysis Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        -464
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs",
+          "mode": "list",
+          "cachedResultName": "Youtube test sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "afc6cb96-a6f8-40df-8652-de043aff16fc",
+      "name": "Add to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        -464
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      },
+      "notes": "Connect your Google Sheets credentials"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs",
+          "mode": "list",
+          "cachedResultName": "Youtube test sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1775274150,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit#gid=1775274150"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a70c164f-27e9-4a7d-8a99-08d2e8a7ecec",
+      "name": "Add to Sheet (No AI)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -512,
+        -272
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fa283a7-de5a-4e42-98cf-f149a7deb356",
+              "name": "channelUrls",
+              "value": "https://www.youtube.com/@NetworkChuck",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10afe833-7f6a-4744-9ee5-d3c94a1c9eb3",
+      "name": "Set Channel URLs1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2144,
+        -368
+      ],
+      "notesInFlow": true,
+      "notes": "Add your 25 YouTube channel URLs here (one per line)"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.searchapi.io/api/v1/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "engine",
+              "value": "youtube_transcripts"
+            },
+            {
+              "name": "video_id",
+              "value": "={{ $json.videoId }}"
+            },
+            {
+              "name": "api_key",
+              "value": "YOUR_SEARCHAPI_KEY"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "624a1f76-99ee-435c-a115-6087b686c7e3",
+      "name": "Get Transcript (SearchAPI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1168,
+        -800
+      ],
+      "notesInFlow": true,
+      "notes": "Option 1: SearchAPI.io (paid, most reliable)"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.supadata.ai/v1/transcript",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "text_only",
+              "value": "true"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "sd_ed6ddd5ebc7fbf2b60964b51767d5ebd"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4b891dec-4d8b-4780-9798-c5f43922c363",
+      "name": "Get Transcript (Supadata)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -800,
+        -1072
+      ],
+      "notesInFlow": true,
+      "alwaysOutputData": false,
+      "executeOnce": true,
+      "notes": "Option 2: Supadata.ai (has free tier)"
+    },
+    {
+      "parameters": {
+        "url": "=https://youtubetranscript.com/?server_vid2={{ $json.videoId }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "d4084639-e9d3-4b1b-a22b-b23acf7c6d8a",
+      "name": "Get Transcript (Free)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1168,
+        -576
+      ],
+      "notesInFlow": true,
+      "notes": "Option 3: Free service (less reliable, may have limits)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process transcript from SearchAPI\nconst videoData = $('Has Videos?1').first().json;\nlet transcript = '';\nlet transcriptError = '';\n\ntry {\n  const response = $input.first().json;\n  \n  if (response.transcripts && response.transcripts.length > 0) {\n    // Combine all transcript segments\n    transcript = response.transcripts\n      .map(t => t.text || '')\n      .join(' ')\n      .replace(/\\s+/g, ' ')\n      .trim();\n  } else if (response.error) {\n    transcriptError = response.error;\n  }\n} catch (e) {\n  transcriptError = e.message;\n}\n\n// Truncate transcript if too long (for AI processing)\nconst maxLength = 15000;\nconst truncatedTranscript = transcript.length > maxLength \n  ? transcript.substring(0, maxLength) + '... [truncated]'\n  : transcript;\n\nreturn [{\n  json: {\n    ...videoData,\n    transcript: truncatedTranscript,\n    transcriptLength: transcript.length,\n    transcriptError: transcriptError,\n    hasTranscript: transcript.length > 0,\n    contentForAnalysis: `Title: ${videoData.videoTitle}\\n\\nDescription: ${videoData.videoDescription}\\n\\nTranscript: ${truncatedTranscript}`\n  }\n}];"
+      },
+      "id": "0a47a62d-c98c-47d7-9290-f1131eb3b35c",
+      "name": "Process SearchAPI Transcript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        -800
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process transcript from Supadata\nconst videoData = $('Has Videos?1').first().json;\nlet transcript = '';\nlet transcriptError = '';\n\ntry {\n  const response = $input.first().json;\n  \n  if (response.content) {\n    transcript = response.content;\n  } else if (response.transcript) {\n    // Alternative response format\n    transcript = Array.isArray(response.transcript)\n      ? response.transcript.map(t => t.text || '').join(' ')\n      : response.transcript;\n  } else if (response.error) {\n    transcriptError = response.error || 'No transcript available';\n  }\n} catch (e) {\n  transcriptError = e.message;\n}\n\nconst maxLength = 15000;\nconst truncatedTranscript = transcript.length > maxLength \n  ? transcript.substring(0, maxLength) + '... [truncated]'\n  : transcript;\n\nreturn [{\n  json: {\n    ...videoData,\n    transcript: truncatedTranscript,\n    transcriptLength: transcript.length,\n    transcriptError: transcriptError,\n    hasTranscript: transcript.length > 0,\n    contentForAnalysis: `Title: ${videoData.videoTitle}\\n\\nDescription: ${videoData.videoDescription}\\n\\nTranscript: ${truncatedTranscript}`\n  }\n}];"
+      },
+      "id": "272d2fbb-ce18-425c-9484-66deccd75383",
+      "name": "Process Supadata Transcript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -1152
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process transcript from free service\nconst videoData = $('Has Videos?1').first().json;\nlet transcript = '';\nlet transcriptError = '';\n\ntry {\n  const response = $input.first().json;\n  const html = response.data || response.body || JSON.stringify(response);\n  \n  // Try to extract transcript from response\n  // The free service returns XML/text format\n  const textMatches = html.match(/<text[^>]*>([^<]*)<\\/text>/g);\n  \n  if (textMatches) {\n    transcript = textMatches\n      .map(match => match.replace(/<[^>]*>/g, ''))\n      .join(' ')\n      .replace(/&amp;/g, '&')\n      .replace(/&lt;/g, '<')\n      .replace(/&gt;/g, '>')\n      .replace(/&quot;/g, '\"')\n      .replace(/&#39;/g, \"'\")\n      .replace(/\\s+/g, ' ')\n      .trim();\n  } else if (typeof html === 'string' && html.length > 100) {\n    // Fallback: try to clean raw text\n    transcript = html\n      .replace(/<[^>]*>/g, ' ')\n      .replace(/\\s+/g, ' ')\n      .trim();\n  }\n  \n  if (!transcript) {\n    transcriptError = 'Could not parse transcript';\n  }\n} catch (e) {\n  transcriptError = e.message;\n}\n\nconst maxLength = 15000;\nconst truncatedTranscript = transcript.length > maxLength \n  ? transcript.substring(0, maxLength) + '... [truncated]'\n  : transcript;\n\nreturn [{\n  json: {\n    ...videoData,\n    transcript: truncatedTranscript,\n    transcriptLength: transcript.length,\n    transcriptError: transcriptError,\n    hasTranscript: transcript.length > 0,\n    contentForAnalysis: `Title: ${videoData.videoTitle}\\n\\nDescription: ${videoData.videoDescription}\\n\\nTranscript: ${truncatedTranscript}`\n  }\n}];"
+      },
+      "id": "8860d833-e09d-4ca8-9266-ee32fb423566",
+      "name": "Process Free Transcript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -976,
+        -576
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "id": "c35635e6-004d-4551-b688-0a0d37620b72",
+      "name": "Rate Limit Delay",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        -880
+      ],
+      "notesInFlow": true,
+      "webhookId": "f07546fe-6931-4a24-91cd-887a7e0ce471",
+      "notes": "Prevents hitting API rate limits"
+    },
+    {
+      "parameters": {
+        "jsCode": "const channelUrls = $input.first().json.channelUrls.split('\\n').filter(url => url.trim());\nconst monthsBack = parseInt($input.first().json.monthsBack) || 6;\n\nconst cutoffDate = new Date();\ncutoffDate.setMonth(cutoffDate.getMonth() - monthsBack);\n\nconst channels = channelUrls.map(url => {\n  url = url.trim();\n  let channelIdentifier = '';\n  \n  if (url.includes('@')) {\n    channelIdentifier = url.split('@')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/channel/')) {\n    channelIdentifier = url.split('/channel/')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/c/')) {\n    channelIdentifier = url.split('/c/')[1]?.split('/')[0]?.split('?')[0];\n  } else if (url.includes('/user/')) {\n    channelIdentifier = url.split('/user/')[1]?.split('/')[0]?.split('?')[0];\n  }\n  \n  return {\n    originalUrl: url,\n    channelIdentifier: channelIdentifier,\n    isHandle: url.includes('@'),\n    cutoffDate: cutoffDate.toISOString()\n  };\n}).filter(ch => ch.channelIdentifier);\n\nreturn channels.map(ch => ({ json: ch }));"
+      },
+      "id": "07969500-cb3a-43bd-9930-c506e7e1e7aa",
+      "name": "Parse Channel URLs1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2144,
+        -1072
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "channelId": "=UC9x0AN7BWHpCDHSm9NiJFJQ",
+        "part": [
+          "id",
+          "snippet",
+          "contentDetails"
+        ]
+      },
+      "id": "69a2620e-5903-40d4-b444-054d2ab1ac39",
+      "name": "Get Channel Info1",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        -1072
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "hcD591g2Qxsk9SA3",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const channelData = $input.first().json;\nconst inputData = $('Parse Channel URLs1').first().json;\n\nreturn [{\n  json: {\n    channelId: channelData.id,\n    channelTitle: channelData.snippet?.title || 'Unknown',\n    channelDescription: channelData.snippet?.description || '',\n    uploadsPlaylistId: channelData.contentDetails?.relatedPlaylists?.uploads,\n    subscriberCount: channelData.statistics?.subscriberCount || 'Hidden',\n    originalUrl: inputData.originalUrl,\n    cutoffDate: inputData.cutoffDate\n  }\n}];"
+      },
+      "id": "9cb632e6-3db4-4bb0-8438-a9d79740067c",
+      "name": "Extract Uploads Playlist1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1696,
+        -1072
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "playlistItem",
+        "operation": "getAll",
+        "playlistId": "={{ $json.uploadsPlaylistId }}",
+        "part": [
+          "snippet",
+          "contentDetails"
+        ],
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "ffa72348-d043-460a-b570-b830e6073e3e",
+      "name": "Get Playlist Videos1",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        -1072
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "hcD591g2Qxsk9SA3",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const channelInfo = $('Extract Uploads Playlist1').first().json;\nconst cutoffDate = new Date(channelInfo.cutoffDate);\nconst videos = $input.all();\n\nconst filteredVideos = videos\n  .filter(item => {\n    const publishDate = new Date(item.json.snippet?.publishedAt || item.json.contentDetails?.videoPublishedAt);\n    return publishDate >= cutoffDate;\n  })\n  .map(item => {\n    const snippet = item.json.snippet || {};\n    const publishDate = snippet.publishedAt || item.json.contentDetails?.videoPublishedAt;\n    const videoId = item.json.contentDetails?.videoId || snippet.resourceId?.videoId;\n    \n    return {\n      json: {\n        channelId: channelInfo.channelId,\n        channelTitle: channelInfo.channelTitle,\n        channelUrl: channelInfo.originalUrl,\n        videoId: videoId,\n        videoTitle: snippet.title || '',\n        videoDescription: snippet.description || '',\n        videoUrl: `https://www.youtube.com/watch?v=${videoId}`,\n        thumbnailUrl: snippet.thumbnails?.high?.url || snippet.thumbnails?.default?.url || '',\n        publishedAt: publishDate,\n        publishedDate: publishDate ? new Date(publishDate).toLocaleDateString() : ''\n      }\n    };\n  });\n\nreturn filteredVideos.length > 0 ? filteredVideos : [{ json: { noVideos: true, channelTitle: channelInfo.channelTitle } }];"
+      },
+      "id": "98a94b09-cf38-4737-b3f4-9a0a9d613d65",
+      "name": "Filter Videos (Last 6 Months)1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        -1072
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze this YouTube video content (title, description, and transcript) and provide a comprehensive analysis. Return ONLY a JSON object with these fields:\n\n- category: Main content category (Tutorial, Review, Vlog, News, Entertainment, Educational, Podcast, Interview, etc.)\n- topics: Array of 5-8 main topics/keywords covered\n- summary: A 2-3 sentence summary of the video's main points\n- keyTakeaways: Array of 3-5 key takeaways or main points\n- contentType: \"short-form\", \"standard\", or \"long-form\"\n- targetAudience: Description of target audience\n- sentiment: Overall tone (positive, negative, neutral, educational, entertaining)\n- mentionedProducts: Array of any products, tools, or services mentioned\n- callToAction: Any calls to action mentioned (subscribe, buy, visit, etc.)\n\nVideo Content:\n{{ $('Get Transcript (Supadata)').item.json.content }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.3
+        }
+      },
+      "id": "f4f52d2e-0c7d-4a89-9fba-580a2ddd2440",
+      "name": "AI Content Analysis1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        -352,
+        -880
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "bslbSXwgn3j9fvH4",
+          "name": "OpenAi account Shyam"
+        }
+      },
+      "notes": "Analyzes transcript + description with AI"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs",
+          "mode": "list",
+          "cachedResultName": "Youtube test sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MkNy3jpenQhGNM9DaAoew5qHC22CIoPj4MKjiyDk9Rs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "2e31f2a4-bfe5-4234-b5b1-71f64475a360",
+      "name": "Add to Google Sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        -880
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zr0r2q1g70G70jjo",
+          "name": "Google Sheets account Shyam"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "channelId": "={{ $json.isHandle ? '' : $json.channelIdentifier }}",
+        "part": [
+          "id",
+          "snippet",
+          "contentDetails"
+        ]
+      },
+      "id": "472915e8-447d-4dd4-9d17-6a5337a2b03f",
+      "name": "Get Channel Info2",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -2224,
+        -688
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "hcD591g2Qxsk9SA3",
+          "name": "YouTube account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fa283a7-de5a-4e42-98cf-f149a7deb356",
+              "name": "channelUrls",
+              "value": "https://www.youtube.com/@NetworkChuck",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cc14a99b-be4f-460c-b475-0f60efa6d8c7",
+      "name": "Set Channel URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2368,
+        -1072
+      ],
+      "notesInFlow": true,
+      "notes": "Add your 25 YouTube channel URLs here (one per line)"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Channel URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Channel URLs": {
+      "main": [
+        [
+          {
+            "node": "Get Channel Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Channel Info": {
+      "main": [
+        [
+          {
+            "node": "Extract Uploads Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Uploads Playlist": {
+      "main": [
+        [
+          {
+            "node": "Get Playlist Videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Playlist Videos": {
+      "main": [
+        [
+          {
+            "node": "Filter Videos (Last 6 Months)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Videos (Last 6 Months)": {
+      "main": [
+        [
+          {
+            "node": "Has Videos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Videos?": {
+      "main": [
+        [
+          {
+            "node": "AI Content Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add to Sheet (No AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Analysis": {
+      "main": [
+        [
+          {
+            "node": "Merge Analysis Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Analysis Data": {
+      "main": [
+        [
+          {
+            "node": "Add to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Channel URLs1": {
+      "main": [
+        [
+          {
+            "node": "Parse Channel URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Transcript (SearchAPI)": {
+      "main": [
+        [
+          {
+            "node": "Process SearchAPI Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Transcript (Supadata)": {
+      "main": [
+        [
+          {
+            "node": "AI Content Analysis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Transcript (Free)": {
+      "main": [
+        [
+          {
+            "node": "Process Free Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process SearchAPI Transcript": {
+      "main": [
+        []
+      ]
+    },
+    "Process Supadata Transcript": {
+      "main": [
+        []
+      ]
+    },
+    "Process Free Transcript": {
+      "main": [
+        []
+      ]
+    },
+    "Parse Channel URLs1": {
+      "main": [
+        [
+          {
+            "node": "Get Channel Info1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Channel Info1": {
+      "main": [
+        [
+          {
+            "node": "Extract Uploads Playlist1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Uploads Playlist1": {
+      "main": [
+        [
+          {
+            "node": "Get Playlist Videos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Playlist Videos1": {
+      "main": [
+        [
+          {
+            "node": "Filter Videos (Last 6 Months)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Videos (Last 6 Months)1": {
+      "main": [
+        [
+          {
+            "node": "Get Transcript (Supadata)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Analysis1": {
+      "main": [
+        [
+          {
+            "node": "Add to Google Sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Google Sheet1": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit Delay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Channel URLs": {
+      "main": [
+        [
+          {
+            "node": "Parse Channel URLs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "7020fbf3-aa47-42cc-b6a2-fc7c285a3de9",
+  "activeVersionId": null,
+  "versionCounter": 58,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-02-02T11:39:20.041Z",
+      "createdAt": "2026-02-02T11:39:20.041Z",
+      "role": "workflow:owner",
+      "workflowId": "5JHFCl9_mievvbCrO4pMd",
+      "projectId": "CFdHyYwi8HDKofY6",
+      "project": {
+        "updatedAt": "2026-01-12T12:21:32.805Z",
+        "createdAt": "2026-01-12T12:20:00.564Z",
+        "id": "CFdHyYwi8HDKofY6",
+        "name": "Shyam Patel <shyam@ninegravity.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T12:20:00.571Z",
+            "createdAt": "2026-01-12T12:20:00.571Z",
+            "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+            "projectId": "CFdHyYwi8HDKofY6",
+            "user": {
+              "updatedAt": "2026-02-02T11:39:08.000Z",
+              "createdAt": "2026-01-12T12:20:00.540Z",
+              "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
+              "email": "shyam@ninegravity.com",
+              "firstName": "Shyam",
+              "lastName": "Patel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T12:21:48.104Z",
+                "personalization_survey_n8n_version": "2.2.6",
+                "companyType": "personal",
+                "reportedSource": "friend"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "iRGT9Oc6gUnKyubocqc3N",
+                "userActivated": true,
+                "userActivatedAt": 1768222886305,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 2,
+                  "lastShownAt": 1769491912669
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-02-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
