@@ -1053,7 +1053,7 @@
             "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
             "projectId": "CFdHyYwi8HDKofY6",
             "user": {
-              "updatedAt": "2026-02-03T04:29:23.000Z",
+              "updatedAt": "2026-02-04T05:46:05.791Z",
               "createdAt": "2026-01-12T12:20:00.540Z",
               "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
               "email": "shyam@ninegravity.com",
@@ -1072,14 +1072,13 @@
                 "userActivated": true,
                 "userActivatedAt": 1768222886305,
                 "npsSurvey": {
-                  "waitingForResponse": true,
-                  "ignoredCount": 2,
-                  "lastShownAt": 1769491912669
+                  "responded": true,
+                  "lastShownAt": 1770183965156
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-02-02",
+              "lastActiveAt": "2026-02-04",
               "isPending": false
             }
           }
