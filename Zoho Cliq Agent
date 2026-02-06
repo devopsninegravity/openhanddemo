@@ -1053,7 +1053,7 @@
             "userId": "d30c8400-95ef-4036-8d81-fbf600089fb5",
             "projectId": "CFdHyYwi8HDKofY6",
             "user": {
-              "updatedAt": "2026-02-04T05:46:05.791Z",
+              "updatedAt": "2026-02-06T04:53:39.000Z",
               "createdAt": "2026-01-12T12:20:00.540Z",
               "id": "d30c8400-95ef-4036-8d81-fbf600089fb5",
               "email": "shyam@ninegravity.com",
@@ -1078,7 +1078,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-02-04",
+              "lastActiveAt": "2026-02-05",
               "isPending": false
             }
           }
